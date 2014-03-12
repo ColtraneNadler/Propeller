@@ -1,0 +1,13 @@
+{
+  "manifest-version": 2,
+  "name": "Propeller",
+  "description": "Time Management and Productivity",
+  "version": "0.1",
+  "app":
+  {
+     "background":
+     {
+       "scripts": ["main.js"]
+     }
+  }
+}
