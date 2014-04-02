@@ -6,9 +6,4 @@ function setEvents()
 {
   pomodoro.setFace(document.getElementById('timer'));
   pomodoro.face.onclick = function(){pomodoro.countDown();};
-
-  Timer.prototype.speak = function(message)
-  {
-    this.face.innerHTML = message;
-  }
 }
