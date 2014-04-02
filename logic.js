@@ -1,7 +1,14 @@
+var pomodoro = new Timer(0.25);
+
 window.onload = setEvents;
 
 function setEvents()
 {
-  var button = document.getElementById('timerControl');
-  button.onclick= startTimer;
+  pomodoro.setFace(document.getElementById('timer'));
+  pomodoro.face.onclick = function(){pomodoro.countDown();};
+
+  Timer.prototype.speak = function(message)
+  {
+    this.face.innerHTML = message;
+  }
 }
