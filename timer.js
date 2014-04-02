@@ -25,6 +25,10 @@ Timer.prototype.countDown = function()
     var that = this;
     this.timerID = window.setInterval(function(){that.tick();},this.refreshInterval);
   }
+  else
+  {
+    this.stop();
+  }
 }
 
 Timer.prototype.tick = function()
