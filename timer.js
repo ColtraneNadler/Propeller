@@ -36,7 +36,7 @@ Timer.prototype.tick = function()
   var timeLeft = this.timerEnd - (new Date().getTime()) ;
   if(timeLeft > 0)
   {
-    this.speak(this.getSeconds(timeLeft)+"."+this.getMilliseconds(timeLeft));
+    this.speak(this.prependZero(this.getHours(timeLeft))+":"+this.prependZero(this.getMinutes(timeLeft))+":"+this.prependZero(this.getSeconds(timeLeft))+"."+this.getMilliseconds(timeLeft));
   }
   else
   {
@@ -48,7 +48,7 @@ Timer.prototype.stop = function()
 {
     clearInterval(this.timerID);
     this.timerID = 0;
-    this.speak("0.0");
+    this.speak("00:00:00.0");
     this.isRunning = false;
 }
 
@@ -59,7 +59,29 @@ Timer.prototype.getMilliseconds = function(milliseconds)
 
 Timer.prototype.getSeconds = function(milliseconds)
 {
-  return Math.floor(milliseconds / 1000) % 60;
+  return (Math.floor(milliseconds / 1000) % 60);
+}
+
+Timer.prototype.getMinutes = function(milliseconds)
+{
+  return (Math.floor((milliseconds / 1000) / 60) % 60);
+}
+
+Timer.prototype.getHours = function(milliseconds)
+{
+  return Math.floor((milliseconds / 1000 / 3600));
+}
+
+Timer.prototype.prependZero = function(value)
+{
+  if(Math.floor(value / 10) == 0)
+  {
+    return "0"+value;
+  }
+  else
+  {
+    return value;
+  }
 }
 
 Timer.prototype.speak = function(message)
