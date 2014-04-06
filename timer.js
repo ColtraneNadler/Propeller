@@ -29,10 +29,10 @@ Timer.prototype.countDown = function()
 
 Timer.prototype.tick = function()
 {
-  var timeLeft = this.timerEnd - (new Date().getTime()) ;
-  if(timeLeft > 0)
+  this.timeLeft = this.timerEnd - (new Date().getTime()) ;
+  if(this.timeLeft > 0)
   {
-    this.speak(this.prependZero(this.getHours(timeLeft))+":"+this.prependZero(this.getMinutes(timeLeft))+":"+this.prependZero(this.getSeconds(timeLeft))+"."+this.getMilliseconds(timeLeft));
+    this.speak(this.prependZero(this.getHours(this.timeLeft))+":"+this.prependZero(this.getMinutes(this.timeLeft))+":"+this.prependZero(this.getSeconds(this.timeLeft))+"."+this.getMilliseconds(this.timeLeft));
   }
   else
   {
