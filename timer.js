@@ -4,6 +4,7 @@ function Timer(time, face)
   this.timerID = 0;
   this.refreshInterval = 100;
   this.isRunning = false;
+  this.timeLeft = time * 60 * 1000;
 }
 
 Timer.prototype.setFace = function(face)
@@ -18,10 +19,11 @@ Timer.prototype.setDuration = function(time)
 
 Timer.prototype.countDown = function()
 {
-  if(this.isRunning == false)
+  if(!this.isRunning)
   {
     this.isRunning = true;
-    this.timerEnd = new Date().getTime() + this.duration * 60 * 1000;
+    this.timeLeft = (this.timeLeft == 0) ? this.duration * 60 * 1000: this.timeLeft;
+    this.timerEnd = new Date().getTime() + this.timeLeft;
     var that = this;
     this.timerID = window.setInterval(function(){that.tick();},this.refreshInterval);
   }
@@ -40,12 +42,35 @@ Timer.prototype.tick = function()
   }
 }
 
-Timer.prototype.stop = function()
+Timer.prototype.pause = function()
 {
+  if(this.isRunning)
+  {
     clearInterval(this.timerID);
     this.timerID = 0;
-    this.speak("00:00:00.0");
     this.isRunning = false;
+  }
+}
+
+Timer.prototype.togglePause = function()
+{
+  if(this.isRunning)
+  {
+    this.pause();
+  }
+  else  //this.isRunning = false;
+  {
+    this.countDown();
+  }
+}
+
+Timer.prototype.stop = function()
+{
+  clearInterval(this.timerID);
+  this.timerID = 0;
+  this.speak("00:00:00.0");
+  this.timeLeft = 0;
+  this.isRunning = false;
 }
 
 Timer.prototype.getMilliseconds = function(milliseconds)
