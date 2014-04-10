@@ -22,3 +22,10 @@ header
   width: 100%;
   height: 5em;
 }
+section
+{
+  background-color: red;
+  display: inline-block;
+  width: 100%;
+  height: 10em;
+}
