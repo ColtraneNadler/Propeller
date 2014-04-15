@@ -24,7 +24,11 @@ window.onload = function()
     request.onsuccess = function(event)
     {
       db = this.result;
-      //getAllToDoItems
+      for(var i in tasks)
+      {
+        addToDo(tasks[i]);
+      }
+      getAllToDos();
     };
     request.onerror = function(event)
     {
@@ -33,7 +37,7 @@ window.onload = function()
     request.onupgradeneeded = function(event)
     {
       console.log("upgrade needed on DB " + db_name);
-      var store = event.currentTarget.result.createObjectStore(db_store_name, {keyPath: 'id', autoincrement: true});
+      var store = event.currentTarget.result.createObjectStore(db_store_name, {autoincrement: true});
     }
   }
   
@@ -83,9 +87,11 @@ window.onload = function()
   }
 
   openDB();
+/**
   for(var i in tasks)
   {
     renderToDo(tasks[i]);
   }
+**/
   todoList.appendChild(ul);
 }
