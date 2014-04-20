@@ -1,9 +1,10 @@
 function DataStore(name)
 {
   this.name = name;
-  this.db = {};
   this.version = null;
   this.objectStore = Array();
+
+  this.results = Array();
 }
 
 DataStore.prototype.setName = function(name)
@@ -56,11 +57,24 @@ DataStore.prototype.open = function()
   request.onupgradeneeded = function(event)
   {
     dataStore.removeTables(event.target.result);
-    dataStore.addTables(event.target.result);
+    dataStore.newEntries = dataStore.addTables(event.target.result);
   }
   request.onsuccess = function(event)
   {
-    //most querires processed here
+    //most queries processed here
+    //does this need to be extracted into a function?
+    if(dataStore.newEntries)
+    {
+      for(i in dataStore.newEntries)
+      {
+        dataStore.addEntry(event.target.result,dataStore.newEntries[i].objectStore,dataStore.newEntries[i].defaults);
+      }
+      dataStore.newEntries = null;
+    }
+    for(i in dataStore.objectStore)
+    {
+      dataStore.retrieveEntry(event.target.result,dataStore.objectStore[i].getName());
+    }
   }
 }
 
@@ -73,12 +87,14 @@ DataStore.prototype.addTables = function(db)
     {
       console.log("Creating object store " + this.objectStore[i].getName());
       var store = db.createObjectStore(this.objectStore[i].getName(),{ "autoIncrement" : true });
-//      if(this.objectStore[i].getDefaultEntry().length > 0)
-//      {
-//        this.addEntry(db,this.objectStore[i].getName(),this.objectStore[i].getDefaultEntry());
-//      }
+      if(this.objectStore[i].getDefaultEntry().length > 0)
+      {
+        var defaultEntries = Array();
+        defaultEntries.push({"objectStore" : this.objectStore[i].getName(),"defaults" : this.objectStore[i].getDefaultEntry()});
+      }
     }
   }
+  return defaultEntries;
 }
 
 DataStore.prototype.removeTables = function(db)
@@ -96,7 +112,6 @@ DataStore.prototype.removeTables = function(db)
 
 DataStore.prototype.addEntry = function(db,objectStore,entry)
 {
-//  console.log(entry);
   var transaction = db.transaction(objectStore,"readwrite");
   var store = transaction.objectStore(objectStore);
 
@@ -104,13 +119,31 @@ DataStore.prototype.addEntry = function(db,objectStore,entry)
   {
     for(i in entry)
     {
-//      console.log(entry[i] + " to be stored in " + objectStore + " table in database " + db.name);
-      var request = store.add(JSON.stringify(entry[i]));
+//      var request = store.add(JSON.stringify(entry[i]));
+      var request = store.add(entry[i]);
     }
   }
   else
   {
-//    console.log(entry + " to be stored in " + objectStore + " table in database " + db.name);
-    var request = store.add(JSON.stringify(entry));    
+//    var request = store.add(JSON.stringify(entry));    
+    var request = store.add(entry);
+  }
+}
+
+DataStore.prototype.retrieveEntry = function(db,objectStore,entry)
+{
+  var dataStore = this;
+  
+  var transaction = db.transaction(objectStore,"readonly");
+  var store = transaction.objectStore(objectStore);
+  var cursor = store.openCursor();
+  cursor.onsuccess = function(event)
+  {
+    var result = event.target.result;
+    if(result)
+    {
+      dataStore.results.push(result.value);
+      result.continue();
+    }
   }
 }
