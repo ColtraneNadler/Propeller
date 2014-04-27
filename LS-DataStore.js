@@ -1,67 +1,61 @@
-function LocalStore()
+function LocalStore(callback)
 {
   this.data = {};
-  this.getUser();
+//  this.getUser();
 }
 
 LocalStore.prototype.getUser = function()
 {
-  this.getData("user",this.checkUser);
+  var ls = this;
+  chrome.storage.local.get(null,function(result)
+                                  {
+//                                    console.log(Object.keys(result).indexOf("USER"));
+//                                    console.log(result.hasOwnProperty("USER"));
+//                                    console.log(Object.keys(result).length);
+                                    if(Object.keys(result).indexOf("USER") < 0)
+                                    {
+                                      console.log("no result");
+                                      ls.data["USER"] = {"name": "user1"};
+                                      ls.data["TASKLIST"] = [{"label" : "create to do list app"},{"label" : "add things to list"},{"label" : "?????????"},{"label" : "profit"},{"label" : "share propeller with your friends"}];
+                                    }
+                                    else
+                                    {
+                                      console.log("result found: " + result.USER.name);
+                                      ls.data.USER = result.USER;
+                                      ls.data.TASKLIST = result.TASKLIST;
+                                    }
+//                                    console.log("Local User: " + ls.data.USER.name);
+//                                    console.log("TASK LIST: " + ls.data.TASKLIST);
+                                    chrome.storage.local.set(ls.data);
+                                  }
+                          );
 }
 
 LocalStore.prototype.getData = function(key,callback)
 {
   var ls = this;
-  chrome.storage.local.get(key,function(result)
-                               {
-                                 ls.data[key] = result[key];
-                                 if(callback)
-                                 {
-                                   callback(result[key],ls);
-                                 }
-                               }
-                          );
-}
-
-LocalStore.prototype.checkUser = function(result,ls)
-{
-  if(ls.dataCheck(result))
+  if(Object.keys(ls.data).indexOf(key) < 0)
   {
-    console.log("user loaded");
-    ls.user = result;
+//    console.log("not found");
+    chrome.storage.local.get(null,function(result)
+                                  {
+                                    if(Object.keys(result).indexOf(key) < 0)
+                                    {
+                                      console.log("no result");
+                                    }
+                                    else
+                                    {
+                                      console.log(result[key]);
+                                      ls.data[key] = result[key];
+                                      callback(ls.data[key]);
+//                                      console.log(ls.data.hasOwnProperty(key));
+//                                      console.log(ls.data[key]);
+                                    }
+                                  }
+                             );
   }
   else
   {
-    console.log("user created");
-    var list = [{"label" : "create to do list app"},{"label" : "add things to list"},{"label" : "?????????"},{"label" : "profit"}];
-    ls.user = {"name":"user1"};
-    var data = {"user": ls.user,"taskList" : list};
+    console.log(Object.keys(this.data).indexOf(key));
   }
-  ls.setData(data);
-}
-
-LocalStore.prototype.dataCheck = function(result)
-{
-  if(!result || result == null || result.length === 0)
-  {
-//    console.log("no result");
-    return false;
-  }
-  else
-  {
-//    console.log(result);
-    return true;
-  }
-}
-
-LocalStore.prototype.setData = function(data)
-{
-  var ls = this;
-  chrome.storage.local.set(data);
-}
-
-LocalStore.prototype.deleteItem = function(key,value)
-{
-  this.data[key].splice(value,1);
-  this.setData(this.data);
 }
