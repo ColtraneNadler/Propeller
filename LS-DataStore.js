@@ -13,11 +13,17 @@ LocalStore.prototype.setDefaults = function(callback)
 {
   var ls = this;
   ls.data.USER = {"name" : "user1"};
-  ls.data.TASKLIST = [{"label" : "create to do list app"},{"label" : "add things to list"},{"label" : "?????????"},{"label" : "profit"},{"label" : "share propeller with your friends"}];
+  ls.data.TASKLIST = [];
+  ls.data.TASKLIST.push(new Task("create to do list app"));
+  ls.data.TASKLIST.push(new Task("add things to list"));
+  ls.data.TASKLIST.push(new Task("??????????????????"));
+  ls.data.TASKLIST.push(new Task("profit"));
+  ls.data.TASKLIST.push(new Task("share propeller"));
   chrome.storage.local.set(ls.data,returnDefaults);
   
   function returnDefaults()
   {
+    console.log(ls.data);
     callback(ls.data.TASKLIST,ls);
   }
 }
@@ -25,7 +31,47 @@ LocalStore.prototype.setDefaults = function(callback)
 LocalStore.prototype.getData = function(key,callback)
 {
   var ls = this;
-  chrome.storage.local.get(key,function(result){ls.data[key] = result[key];callback(result[key],ls);});
+  chrome.storage.local.get(key,function(result)
+                               {
+                                 ls.data[key] = reconstitute(key,result[key]);
+                                 callback(ls.data[key],ls);
+                               }
+                          );
+  
+  function reconstitute(object,value)
+  {
+    if(object == "USER")
+    {
+    }
+    else if(object == "TASKLIST")
+    {
+      if(value.length > 0)
+      {
+        for(var i in value)
+        {
+          value[i] = reconstitute("TASK",value[i]);
+        }
+      }
+      else
+      {
+        value = reconstitute("TASK",value);
+      }
+    }
+    else if(object == "TIMER")
+    {
+      var tempTimer = new Timer(value.duration);
+      value = tempTimer;
+    }
+    else if(object == "TASK")
+    {
+      var tempTask = new Task(value.label);
+      tempTask.setComplete(value.complete);
+      tempTask.timer = reconstitute("TIMER",value.timer);
+      value = tempTask;
+    }
+    return value;
+  }
+  
 }
 
 LocalStore.prototype.deleteItem = function(key,value,callback)
@@ -39,10 +85,15 @@ LocalStore.prototype.addItem = function(key,value,callback)
 {
   var ls = this;
   this.data[key].push(value);
+  console.log(this.data[key]);
   chrome.storage.local.set(this.data,returnData);
   
   function returnData()
   {
     callback(ls.data[key],ls);
   }
+}
+LocalStore.prototype.setData = function()
+{
+  chrome.storage.local.set(this.data);
 }

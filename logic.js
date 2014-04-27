@@ -9,10 +9,12 @@ window.onload = function()
   {
     if(!exists)
     {
+//    console.log("no user");
       return ls.setDefaults(printList); 
     }
     else
     {
+//      console.log("user");
       ls.getData('TASKLIST',printList);
     }
   }
@@ -42,11 +44,18 @@ function printList(items,ls)
   }
   var ul = document.createElement("ul");
   console.log(items);
-  for(i in items)
+  for(var i in items)
   {
+    if(!items[i].complete)
+    {
     var li = document.createElement("li");
 //    li.id = taskList[i].getLabel();
 //    li.draggable = true;
+    var taskCheck = document.createElement("input");
+    taskCheck.setAttribute('type','checkbox');
+    taskCheck.id = "check"+i;
+    taskCheck.onchange = function(event){document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through"; document.getElementById(event.target.id).style.display = "none";console.log(event.target.id.substr("check".length));ls.data.TASKLIST[event.target.id.substr("check".length)].setComplete(true);ls.setData();};
+    li.appendChild(taskCheck);
     var taskText = document.createTextNode(items[i].label)
     var a = document.createElement("a");
     a.id = i;
@@ -56,6 +65,7 @@ function printList(items,ls)
     li.appendChild(taskText);
     li.appendChild(a);
     ul.appendChild(li);
+    }
   }
   todoList.appendChild(ul);
 }
