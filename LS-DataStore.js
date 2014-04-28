@@ -1,4 +1,5 @@
-function LocalStore(callback)
+
+n LocalStore(callback)
 {
   this.data = {};
 }
@@ -34,6 +35,7 @@ LocalStore.prototype.getData = function(key,callback)
   chrome.storage.local.get(key,function(result)
                                {
                                  ls.data[key] = reconstitute(key,result[key]);
+                                 ls.setData();
                                  callback(ls.data[key],ls);
                                }
                           );
@@ -65,13 +67,16 @@ LocalStore.prototype.getData = function(key,callback)
     else if(object == "TASK")
     {
       var tempTask = new Task(value.label);
+      tempTask.creationTime = value.creationTime;
       tempTask.setComplete(value.complete);
-      tempTask.timer = reconstitute("TIMER",value.timer);
+      if(value.complete)
+      {
+        tempTask.completionTime = value.completionTime;
+      }
       value = tempTask;
     }
     return value;
   }
-  
 }
 
 LocalStore.prototype.deleteItem = function(key,value,callback)
@@ -85,7 +90,6 @@ LocalStore.prototype.addItem = function(key,value,callback)
 {
   var ls = this;
   this.data[key].push(value);
-  console.log(this.data[key]);
   chrome.storage.local.set(this.data,returnData);
   
   function returnData()

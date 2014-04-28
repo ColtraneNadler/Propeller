@@ -1,4 +1,4 @@
-window.onload = function()
+ndow.onload = function()
 {
   var ls = new LocalStore();
   ls.getUser(verifyUser);
@@ -9,12 +9,10 @@ window.onload = function()
   {
     if(!exists)
     {
-//    console.log("no user");
       return ls.setDefaults(printList); 
     }
     else
     {
-//      console.log("user");
       ls.getData('TASKLIST',printList);
     }
   }
@@ -23,7 +21,7 @@ window.onload = function()
   {
     if(event.keyCode == 13)
     {
-      var task = {"label" : event.target.value};
+      var task = new Task(event.target.value);
       ls.addItem("TASKLIST",task,printList);
       event.target.value = null;
     }
@@ -43,7 +41,6 @@ function printList(items,ls)
     todoList.removeChild(todoList.firstChild);
   }
   var ul = document.createElement("ul");
-  console.log(items);
   for(var i in items)
   {
     if(!items[i].complete)
