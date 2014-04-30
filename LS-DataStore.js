@@ -1,5 +1,4 @@
-
-n LocalStore(callback)
+function LocalStore(callback)
 {
   this.data = {};
 }
