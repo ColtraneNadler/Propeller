@@ -38,7 +38,7 @@ LocalStore.prototype.getData = function(key,callback)
                                  callback(ls.data[key],ls);
                                }
                           );
-  
+
   function reconstitute(object,value)
   {
     if(object == "USER")
@@ -66,11 +66,9 @@ LocalStore.prototype.getData = function(key,callback)
     else if(object == "TASK")
     {
       var tempTask = new Task(value.label);
-      tempTask.creationTime = value.creationTime;
-      tempTask.setComplete(value.complete);
-      if(value.complete)
+      for(var i in value)
       {
-        tempTask.completionTime = value.completionTime;
+        tempTask[i] = value[i];
       }
       value = tempTask;
     }
