@@ -3,6 +3,8 @@ ndow.onload = function()
   var ls = new LocalStore();
   ls.getUser(verifyUser);
   var todoIn = document.getElementById('task-in');
+  var tagIn = document.getElementById('tagLabel');
+  tagIn.onkeydown = addTag;
   todoIn.onkeydown = addTask;
   
   function verifyUser(exists)
@@ -14,6 +16,7 @@ ndow.onload = function()
     else
     {
       ls.getData('TASKLIST',printList);
+      ls.getData('TAGS',printTags);
     }
   }
   
@@ -26,6 +29,21 @@ ndow.onload = function()
       event.target.value = null;
     }
   }
+
+  function addTag(event)
+  {
+    if(event.keyCode == 13)
+    {
+      var tag = event.target.value.replace(/, /g,",");
+      tag = tag.split(",");
+      for(var i = 0; i < tag.length; i++)
+      {
+        tag[i] = tag[i].replace(/ /g,"_");
+      }
+      ls.addTag("TAGS",tag,printTags);
+      event.target.value = null;
+    }
+  }
 }
 
 function loadItems(items)
@@ -33,9 +51,27 @@ function loadItems(items)
   console.log(items);
 }
 
+function printTags(items,ls)
+{
+  var tagList = document.getElementById('tagList');
+  while(tagList.firstchild)
+  {
+    tagList.removeChild(tagList.firstChild);
+  }
+  var ul = document.createElement("ul");
+  for(var i in items)
+  {
+    var li = document.createElement("li");
+    var tagLabel = document.createTextNode(items[i].replace(/_/g," "));
+    li.appendChild(tagLabel);
+    ul.appendChild(li);
+  }
+  tagList.appendChild(ul);
+}
+
 function printList(items,ls)
 {
-  var todoList = document.getElementById('tasklist');
+  var todoList = document.getElementById('taskList');
   while(todoList.firstChild)
   {
     todoList.removeChild(todoList.firstChild);

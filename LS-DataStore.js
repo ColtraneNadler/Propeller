@@ -13,12 +13,20 @@ LocalStore.prototype.setDefaults = function(callback)
 {
   var ls = this;
   ls.data.USER = {"name" : "user1"};
+
   ls.data.TASKLIST = [];
   ls.data.TASKLIST.push(new Task("create to do list app"));
   ls.data.TASKLIST.push(new Task("add things to list"));
   ls.data.TASKLIST.push(new Task("??????????????????"));
   ls.data.TASKLIST.push(new Task("profit"));
   ls.data.TASKLIST.push(new Task("share propeller"));
+
+  ls.data.TAGS = [];
+  ls.data.TAGS.push("work");
+  ls.data.TAGS.push("school");
+  ls.data.TAGS.push("home");
+  ls.data.TAGS.push("other");
+
   chrome.storage.local.set(ls.data,returnDefaults);
   
   function returnDefaults()
@@ -94,6 +102,29 @@ LocalStore.prototype.addItem = function(key,value,callback)
     callback(ls.data[key],ls);
   }
 }
+
+LocalStore.prototype.addTag = function(key,value,callback)
+{
+  var ls = this;
+  if(ls.data[key])
+  {
+    for(var i in value)
+    {
+      this.data[key].push(value[i]);
+    }
+  }
+  else
+  {
+    ls.data[key] = value;
+  }
+  chrome.storage.local.set(this.data,returnData);
+
+  function returnData()
+  {
+    callback(ls.data[key],ls);
+  }
+}
+
 LocalStore.prototype.setData = function()
 {
   chrome.storage.local.set(this.data);

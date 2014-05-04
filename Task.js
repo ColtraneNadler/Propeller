@@ -4,6 +4,7 @@ function Task(label)
 
   this.id =  Math.random().toString(36).substr(2, 5);
   this.label = label;
+  this.tags = [];
 
   this.active = true;
   this.complete = false;
