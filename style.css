@@ -4,6 +4,15 @@ html
   margin: 0px;
   padding: 0px;
 }
+body,header,section
+{
+  border: none;
+  font: inherit;
+  margin: 0em;
+  padding: 0em;
+  color: inherit;
+  text-decoration: inherit;
+}
 ul
 {
   list-style: none;

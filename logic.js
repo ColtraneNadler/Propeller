@@ -1,4 +1,4 @@
-ndow.onload = function()
+window.onload = function()
 {
   var ls = new LocalStore();
   ls.getUser(verifyUser);
