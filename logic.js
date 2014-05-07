@@ -1,11 +1,17 @@
 window.onload = function()
 {
   var ls = new LocalStore();
+  
+  var addTask = document.getElementById("addTask").style.display = "none";
+  var showAddTask = document.getElementById("showAddTask");
+  var hideAddTask = document.getElementById("hideAddTask");
+  var taskLabel = document.getElementById("taskLabel");
+  
+  showAddTask.addEventListener("click",function(event){ document.getElementById("addTask").style.display = "inline-block"; });
+  hideAddTask.addEventListener("click",function(event){ document.getElementById("addTask").style.display = "none"; });  
+  taskLabel.addEventListener("keydown",function(event,ls){ createTask(event,ls); });
+  
   ls.getUser(verifyUser);
-  var todoIn = document.getElementById('task-in');
-  var tagIn = document.getElementById('tagLabel');
-  tagIn.onkeydown = addTag;
-  todoIn.onkeydown = addTask;
   
   function verifyUser(exists)
   {
@@ -19,54 +25,18 @@ window.onload = function()
       ls.getData('TAGS',printTags);
     }
   }
-  
-  function addTask(event)
-  {
-    if(event.keyCode == 13)
-    {
-      var task = new Task(event.target.value);
-      ls.addItem("TASKLIST",task,printList);
-      event.target.value = null;
-    }
-  }
-
-  function addTag(event)
-  {
-    if(event.keyCode == 13)
-    {
-      var tag = event.target.value.replace(/, /g,",");
-      tag = tag.split(",");
-      for(var i = 0; i < tag.length; i++)
-      {
-        tag[i] = tag[i].replace(/ /g,"_");
-      }
-      ls.addTag("TAGS",tag,printTags);
-      event.target.value = null;
-    }
-  }
 }
 
-function loadItems(items)
+function createTask(event,ls)
 {
-  console.log(items);
-}
-
-function printTags(items,ls)
-{
-  var tagList = document.getElementById('tagList');
-  while(tagList.firstchild)
+  console.log(ls);
+  console.log(event.target);
+  if(event.keyCode == 13)
   {
-    tagList.removeChild(tagList.firstChild);
+//    var task = new Task(event.target.value);
+//    ls.addItem("TASKLIST",task,printList);
+//    event.target.value = null;
   }
-  var ul = document.createElement("ul");
-  for(var i in items)
-  {
-    var li = document.createElement("li");
-    var tagLabel = document.createTextNode(items[i].replace(/_/g," "));
-    li.appendChild(tagLabel);
-    ul.appendChild(li);
-  }
-  tagList.appendChild(ul);
 }
 
 function printList(items,ls)
