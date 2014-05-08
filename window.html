@@ -5,12 +5,19 @@
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
-    <header id="activeItem"><input type="text" id ="task-in" /></header>
-    <section id="taskCreator">
+    <header id="activeItem">
+    </header>
+<!--
+    <div id="timer" dropzone="move text/plain">00:00:00.0</div>
+-->
+      <nav><ul><li id="showAddTask">Add</li><li id="hideAddTask">Close</li></ul></nav>
+    <section id="addTask">
       <input type="text" id="taskLabel" />
-      <input type="text" id="tagLabel" />
       <section id="tagList">
       </section>
+    </section>
+
+    <section id="taskList">
     </section>
     <script src="Timer.js" type="text/javascript"></script>
     <script src="Task.js" type="text/javascript"></script>
