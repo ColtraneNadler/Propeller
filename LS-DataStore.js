@@ -26,7 +26,7 @@ LocalStore.prototype.setDefaults = function(callback)
   ls.data.TAGS.push("school");
   ls.data.TAGS.push("home");
   ls.data.TAGS.push("other");
-
+  
   chrome.storage.local.set(ls.data,returnDefaults);
   
   function returnDefaults()
@@ -46,7 +46,7 @@ LocalStore.prototype.getData = function(key,callback)
                                  callback(ls.data[key],ls);
                                }
                           );
-
+  
   function reconstitute(object,value)
   {
     if(object == "USER")
@@ -118,7 +118,7 @@ LocalStore.prototype.addTag = function(key,value,callback)
     ls.data[key] = value;
   }
   chrome.storage.local.set(this.data,returnData);
-
+  
   function returnData()
   {
     callback(ls.data[key],ls);
