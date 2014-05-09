@@ -31,7 +31,7 @@ LocalStore.prototype.setDefaults = function(callback)
   
   function returnDefaults()
   {
-    console.log(ls.data);
+//    console.log(ls.data);
     callback(ls.data.TASKLIST,ls);
   }
 }

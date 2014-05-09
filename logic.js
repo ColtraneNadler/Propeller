@@ -47,6 +47,17 @@ function createTask(event)
   if(event.keyCode == 13)
   {
     var task = new Task(event.target.value);
+    var tagList = document.getElementById("tagList").firstChild;
+    var tags = tagList.getElementsByTagName("li");
+    for(var i = 0; i < tags.length; i++)
+    {
+      if(tags[i].firstChild.checked)
+      {
+//        console.log(tags[i].id);
+        task.addTag(tags[i].id);
+      }
+    }
+//    console.log(task);
     ls.addItem("TASKLIST",task,printTasks);
     event.target.value = null;
   }
@@ -78,6 +89,7 @@ function printTags(items,ls)
   for(var i in items)
   {
     var li = document.createElement("li");
+    li.id = items[i];
     var tagCheck = document.createElement("input");
     tagCheck.setAttribute('type','checkbox');
     var tagLabel = document.createTextNode(items[i].replace(/_/g," "));

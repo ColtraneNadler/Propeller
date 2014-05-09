@@ -72,3 +72,7 @@ Task.prototype.getCompletionTime = function()
 {
   return this.completionTime;
 }
+Task.prototype.addTag = function(tag)
+{
+  this.tags.push(tag);
+}
