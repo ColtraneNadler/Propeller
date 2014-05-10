@@ -6,9 +6,14 @@ window.onload = function()
   var showAddTask = document.getElementById("showAddTask");
   var hideAddTask = document.getElementById("hideAddTask");
   var taskLabel = document.getElementById("taskLabel");
-
+  var showMenu = document.getElementById("showMenu");
+  var hideMenu = document.getElementById("hideMenu");
+  var tagsMenu = document.getElementById("tagsMenu");
+  
   addTask.style.display = "none";
   hideAddTask.style.display = "none";
+  hideMenu.style.display = "none";
+  tagsMenu.style.display = "none";
 
   showAddTask.addEventListener("click",function(event)
                                        {
@@ -23,8 +28,23 @@ window.onload = function()
                                          document.getElementById("hideAddTask").style.display = "none";
                                          document.getElementById("showAddTask").style.display = "inline-block";
                                        }
-                              );  
+                              );
   taskLabel.addEventListener("keydown",function(event,ls){ createTask(event,ls); });
+  
+  showMenu.addEventListener("click",function(event)
+                                    {
+                                      document.getElementById("tagsMenu").style.display = "inline-block";
+                                      hideMenu.style.display = "inline-block";
+                                      showMenu.style.display = "none";
+                                    }
+                            );
+  hideMenu.addEventListener("click",function(event)
+                                    {
+                                      document.getElementById("tagsMenu").style.display = "none";
+                                      hideMenu.style.display = "none";
+                                      showMenu.style.display = "inline-block";
+                                    }
+                            );
   
   ls.getUser(verifyUser);
   
@@ -38,6 +58,7 @@ window.onload = function()
     {
       ls.getData('TASKLIST',printTasks);
       ls.getData('TAGS',printTags);
+      ls.getData('TAGS',makeMenu);
     }
   }
 }
@@ -108,6 +129,26 @@ function printTags(items,ls)
   tagList.appendChild(createTag);
 }
 
+function makeMenu(items,ls)
+{
+  var tagList = document.getElementById('tagsMenu');
+  while(tagList.firstChild)
+  {
+    tagList.removeChild(tagList.firstChild);
+  }
+  var ul = document.createElement("ul");
+  for(var i in items)
+  {
+    var li = document.createElement("li");
+    li.id = items[i];
+    var tagLabel = document.createTextNode(items[i].replace(/_/g," "));
+    li.appendChild(tagLabel);
+    ul.appendChild(li);
+  }
+  tagList.appendChild(ul);
+  tagList.appendChild(createTag);
+}
+
 function printTasks(items,ls)
 {
   var todoList = document.getElementById('taskList');
@@ -126,7 +167,7 @@ function printTasks(items,ls)
     var taskCheck = document.createElement("input");
     taskCheck.setAttribute('type','checkbox');
     taskCheck.id = "check"+i;
-    taskCheck.onchange = function(event){document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through"; document.getElementById(event.target.id).style.display = "none";console.log(event.target.id.substr("check".length));ls.data.TASKLIST[event.target.id.substr("check".length)].setComplete(true);ls.setData();};
+    taskCheck.onchange = function(event){document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through"; document.getElementById(event.target.id).style.display = "none";console.log(event.target.id.substr("check".length));ls.data.TASKLIST[event.target.id.substr("check".length)].setComplete(true);ls.data.TASKLIST[event.target.id.substr("check".length)].addTag("completed");ls.setData();};
     li.appendChild(taskCheck);
     var taskText = document.createTextNode(items[i].label)
     var a = document.createElement("a");
