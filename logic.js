@@ -20,6 +20,7 @@ window.onload = function()
                                          document.getElementById("addTask").style.display = "inline-block";
                                          document.getElementById("hideAddTask").style.display = "inline-block";
                                          document.getElementById("showAddTask").style.display = "none";
+                                         document.getElementById("tagsMenu").style.display = "none";
                                        }
                               );
   hideAddTask.addEventListener("click",function(event)
@@ -33,9 +34,11 @@ window.onload = function()
   
   showMenu.addEventListener("click",function(event)
                                     {
+                                      ls.getData('TAGS',makeMenu);
                                       document.getElementById("tagsMenu").style.display = "inline-block";
                                       hideMenu.style.display = "inline-block";
                                       showMenu.style.display = "none";
+                                      addTask.style.display = "none";
                                     }
                             );
   hideMenu.addEventListener("click",function(event)
@@ -58,7 +61,6 @@ window.onload = function()
     {
       ls.getData('TASKLIST',printTasks);
       ls.getData('TAGS',printTags);
-      ls.getData('TAGS',makeMenu);
     }
   }
 }
@@ -116,6 +118,14 @@ function printTags(items,ls)
     var tagLabel = document.createTextNode(items[i].replace(/_/g," "));
     li.appendChild(tagCheck);
     li.appendChild(tagLabel);
+    
+    var a = document.createElement("a");
+    a.id = i;
+    a.onclick = function(event){document.getElementById(event.target.id).parentNode.style.display = "none";ls.deleteItem("TAGS",event.target.id);console.log(event.target.id);};
+    var remove = document.createTextNode("[ X ]");
+    a.appendChild(remove);
+    li.appendChild(a);
+    
     ul.appendChild(li);
   }
 //  var li = document.createElement("li");
