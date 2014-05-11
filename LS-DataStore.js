@@ -36,14 +36,14 @@ LocalStore.prototype.setDefaults = function(callback)
   }
 }
 
-LocalStore.prototype.getData = function(key,callback)
+LocalStore.prototype.getData = function(key,callback,args)
 {
   var ls = this;
   chrome.storage.local.get(key,function(result)
                                {
                                  ls.data[key] = reconstitute(key,result[key]);
                                  ls.setData();
-                                 callback(ls.data[key],ls);
+                                 callback(ls.data[key],ls,args);
                                }
                           );
   

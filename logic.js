@@ -17,35 +17,26 @@ window.onload = function()
 
   showAddTask.addEventListener("click",function(event)
                                        {
-                                         document.getElementById("addTask").style.display = "inline-block";
-                                         document.getElementById("hideAddTask").style.display = "inline-block";
-                                         document.getElementById("showAddTask").style.display = "none";
-                                         document.getElementById("tagsMenu").style.display = "none";
+                                         hideTagMenu(event);
+                                         showTaskForm(event);
                                        }
                               );
   hideAddTask.addEventListener("click",function(event)
                                        {
-                                         document.getElementById("addTask").style.display = "none";
-                                         document.getElementById("hideAddTask").style.display = "none";
-                                         document.getElementById("showAddTask").style.display = "inline-block";
+                                         hideTaskForm(event);
                                        }
                               );
   taskLabel.addEventListener("keydown",function(event,ls){ createTask(event,ls); });
   
   showMenu.addEventListener("click",function(event)
                                     {
-                                      ls.getData('TAGS',makeMenu);
-                                      document.getElementById("tagsMenu").style.display = "inline-block";
-                                      hideMenu.style.display = "inline-block";
-                                      showMenu.style.display = "none";
-                                      addTask.style.display = "none";
+                                      hideTaskForm(event);
+                                      showTagMenu(event);
                                     }
                             );
   hideMenu.addEventListener("click",function(event)
                                     {
-                                      document.getElementById("tagsMenu").style.display = "none";
-                                      hideMenu.style.display = "none";
-                                      showMenu.style.display = "inline-block";
+                                      hideTagMenu(event);
                                     }
                             );
   
@@ -152,15 +143,36 @@ function makeMenu(items,ls)
     var li = document.createElement("li");
     li.id = items[i];
     var tagLabel = document.createTextNode(items[i].replace(/_/g," "));
-    li.appendChild(tagLabel);
+    var a = document.createElement("a");
+    a.id=items[i];
+    a.appendChild(tagLabel);
+    a.addEventListener("click",function(event){ls.getData("TASKLIST",getTasksByTag,event.target.id);});
+    li.appendChild(a);
     ul.appendChild(li);
   }
   tagList.appendChild(ul);
-  tagList.appendChild(createTag);
+//  getTasksByTag();
+}
+
+function getTasksByTag(items,ls,tag)
+{
+  var tasks = [];
+  for(var i in items)
+  {
+    if(items[i].tags.indexOf(tag) != -1)
+    {
+      tasks.push(items[i]);      
+    }
+//    console.log(items[i].tags.indexOf("#houston"));
+  }
+//  console.log(tasks);
+//  return tasks;
+  printTasks(tasks,ls);
 }
 
 function printTasks(items,ls)
 {
+  console.log(items);
   var todoList = document.getElementById('taskList');
   while(todoList.firstChild)
   {
@@ -196,4 +208,34 @@ function printTasks(items,ls)
 function printWorld(items)
 {
   console.log(items);
+}
+
+function showTagMenu(event)
+{
+  ls.getData('TAGS',makeMenu);
+//  ls.getData('TASKLIST',getTasksByTag,"#houston");
+  document.getElementById("tagsMenu").style.display = "inline-block";
+  document.getElementById("hideMenu").style.display = "inline-block";
+  document.getElementById("showMenu").style.display = "none";
+}
+
+function hideTagMenu(event)
+{
+  document.getElementById("tagsMenu").style.display = "none";
+  document.getElementById("hideMenu").style.display = "none";
+  document.getElementById("showMenu").style.display = "inline-block";
+}
+
+function showTaskForm(event)
+{
+  document.getElementById("addTask").style.display = "inline-block";
+  document.getElementById("hideAddTask").style.display = "inline-block";
+  document.getElementById("showAddTask").style.display = "none";
+}
+
+function hideTaskForm(event)
+{
+  document.getElementById("addTask").style.display = "none";
+  document.getElementById("hideAddTask").style.display = "none";
+  document.getElementById("showAddTask").style.display = "inline-block";
 }
