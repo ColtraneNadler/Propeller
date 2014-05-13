@@ -129,3 +129,8 @@ LocalStore.prototype.setData = function()
 {
   chrome.storage.local.set(this.data);
 }
+
+LocalStore.prototype.dumpData = function(callback)
+{
+  chrome.storage.local.get(null,function(result){callback(JSON.stringify(result))});
+}

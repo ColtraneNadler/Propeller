@@ -56,6 +56,8 @@ window.onload = function()
   }
 }
 
+ls.dumpData(printWorld);
+
 function createTask(event)
 {
   if(event.keyCode == 13)
