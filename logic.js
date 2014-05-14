@@ -39,6 +39,14 @@ window.onload = function()
                                       hideTagMenu(event);
                                     }
                             );
+  document.getElementById("dump").addEventListener("dblclick",function(event)
+                                                              {
+                                                                console.log("event detected");
+                                                                var data  = JSON.parse(event.target.value);
+                                                                console.log(data);
+                                                                ls.importData(data);
+                                                              }
+                                                  );
   
   ls.getUser(verifyUser);
   
@@ -56,7 +64,8 @@ window.onload = function()
   }
 }
 
-ls.dumpData(printWorld);
+ls.dumpData(dump);
+//ls.dumpData(ls.importData);
 
 function createTask(event)
 {
@@ -77,6 +86,12 @@ function createTask(event)
     ls.addItem("TASKLIST",task,printTasks);
     event.target.value = null;
   }
+}
+
+function dump(data)
+{
+  var output = document.createTextNode(data);
+  document.getElementById("dump").appendChild(output);
 }
 
 function addTag(event)

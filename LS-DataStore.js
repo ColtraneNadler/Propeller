@@ -134,3 +134,9 @@ LocalStore.prototype.dumpData = function(callback)
 {
   chrome.storage.local.get(null,function(result){callback(JSON.stringify(result))});
 }
+
+LocalStore.prototype.importData = function(input)
+{
+  this.data = input;
+  this.setData();
+}
