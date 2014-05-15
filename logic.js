@@ -17,6 +17,7 @@ window.onload = function()
 
   showAddTask.addEventListener("click",function(event)
                                        {
+                                         ls.getData('TAGS',printTags);
                                          hideTagMenu(event);
                                          showTaskForm(event);
                                        }
@@ -54,12 +55,13 @@ window.onload = function()
   {
     if(!exists)
     {
-      return ls.setDefaults(printTasks); 
+      return ls.setDefaults(getTasksByTag);
+//      return ls.setDefaults(printTasks); 
     }
     else
     {
-      ls.getData('TASKLIST',printTasks);
-      ls.getData('TAGS',printTags);
+      ls.getData('TASKLIST',getTasksByTag);
+//      ls.getData('TAGS',printTags);
     }
   }
 }
@@ -74,17 +76,25 @@ function createTask(event)
     var task = new Task(event.target.value);
     var tagList = document.getElementById("tagList").firstChild;
     var tags = tagList.getElementsByTagName("li");
-    for(var i = 0; i < tags.length; i++)
+    if(tags.length == 0)
     {
-      if(tags[i].firstChild.checked)
-      {
-//        console.log(tags[i].id);
-        task.addTag(tags[i].id);
-      }
+      task.addTag("other");
     }
-//    console.log(task);
-    ls.addItem("TASKLIST",task,printTasks);
-    event.target.value = null;
+    else
+    {
+      for(var i = 0; i < tags.length; i++)
+      {
+        if(tags[i].firstChild.checked)
+        {
+//          console.log(tags[i].id);
+          task.addTag(tags[i].id);
+        }
+      }
+      task.addTag("all");
+//      console.log(task);
+      ls.addItem("TASKLIST",task,printTasks);
+      event.target.value = null;
+    }
   }
 }
 
@@ -173,10 +183,14 @@ function makeMenu(items,ls)
 
 function getTasksByTag(items,ls,tag)
 {
+  if(!tag)
+  {
+    tag = "all";
+  }
   var tasks = [];
   for(var i in items)
   {
-    if(items[i].tags.indexOf(tag) != -1)
+    if(items[i].tags.indexOf(tag) != -1 && (tag == "completed" || items[i].tags.indexOf("completed") == -1))
     {
       tasks.push(items[i]);      
     }
@@ -189,7 +203,7 @@ function getTasksByTag(items,ls,tag)
 
 function printTasks(items,ls)
 {
-  console.log(items);
+//  console.log(items);
   var todoList = document.getElementById('taskList');
   while(todoList.firstChild)
   {
@@ -198,8 +212,8 @@ function printTasks(items,ls)
   var ul = document.createElement("ul");
   for(var i in items)
   {
-    if(!items[i].complete)
-    {
+//    if(!items[i].complete)
+//    {
     var li = document.createElement("li");
 //    li.id = taskList[i].getLabel();
 //    li.draggable = true;
@@ -217,7 +231,7 @@ function printTasks(items,ls)
     li.appendChild(taskText);
     li.appendChild(a);
     ul.appendChild(li);
-    }
+//    }
   }
   todoList.appendChild(ul);
 }

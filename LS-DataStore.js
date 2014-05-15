@@ -14,18 +14,46 @@ LocalStore.prototype.setDefaults = function(callback)
   var ls = this;
   ls.data.USER = {"name" : "user1"};
 
-  ls.data.TASKLIST = [];
-  ls.data.TASKLIST.push(new Task("create to do list app"));
-  ls.data.TASKLIST.push(new Task("add things to list"));
-  ls.data.TASKLIST.push(new Task("??????????????????"));
-  ls.data.TASKLIST.push(new Task("profit"));
-  ls.data.TASKLIST.push(new Task("share propeller"));
-
   ls.data.TAGS = [];
+  ls.data.TAGS.push("all");
   ls.data.TAGS.push("work");
   ls.data.TAGS.push("school");
   ls.data.TAGS.push("home");
   ls.data.TAGS.push("other");
+  ls.data.TAGS.push("completed");
+  
+  ls.data.TASKLIST = [];  
+  
+  var task = new Task("create to do list app");
+  task.addTag("all");
+  task.addTag("other");
+  ls.data.TASKLIST.push(task);
+  
+  var task = new Task("add things to list");
+  task.addTag("all");
+  task.addTag("other");
+  ls.data.TASKLIST.push(task);
+
+  var task = new Task("??????????????????");
+  task.addTag("all");
+  task.addTag("other");
+  ls.data.TASKLIST.push(task);
+  
+  var task = new Task("profit");
+  task.addTag("all");
+  task.addTag("other");
+  ls.data.TASKLIST.push(task);
+  
+  var task = new Task("share propeller");
+  task.addTag("all");
+  task.addTag("other");
+  ls.data.TASKLIST.push(task);
+
+//  ls.data.TASKLIST.push(new Task("create to do list app"));
+//  ls.data.TASKLIST.push(new Task("add things to list"));
+//  ls.data.TASKLIST.push(new Task("??????????????????"));
+//  ls.data.TASKLIST.push(new Task("profit"));
+//  ls.data.TASKLIST.push(new Task("share propeller"));
   
   chrome.storage.local.set(ls.data,returnDefaults);
   
