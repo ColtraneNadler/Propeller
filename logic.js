@@ -42,10 +42,11 @@ window.onload = function()
                             );
   document.getElementById("dump").addEventListener("dblclick",function(event)
                                                               {
-                                                                console.log("event detected");
+//                                                                console.log("event detected");
                                                                 var data  = JSON.parse(event.target.value);
-                                                                console.log(data);
+//                                                                console.log(data);
                                                                 ls.importData(data);
+//                                                                ls.importData(event.target.value);
                                                               }
                                                   );
   
@@ -60,7 +61,9 @@ window.onload = function()
     }
     else
     {
-      ls.getData('TASKLIST',getTasksByTag);
+      console.log(ls.data.USER);
+      console.log(ls.data.USER.getActiveTag());
+      ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
 //      ls.getData('TAGS',printTags);
     }
   }
@@ -139,7 +142,7 @@ function printTags(items,ls)
     
     var a = document.createElement("a");
     a.id = i;
-    a.onclick = function(event){document.getElementById(event.target.id).parentNode.style.display = "none";ls.deleteItem("TAGS",event.target.id);console.log(event.target.id);};
+    a.onclick = function(event){document.getElementById(event.target.id).parentNode.style.display = "none"; ls.deleteItem("TAGS",event.target.id);console.log(event.target.id);};
     var remove = document.createTextNode("[ X ]");
     a.appendChild(remove);
     li.appendChild(a);
@@ -173,7 +176,13 @@ function makeMenu(items,ls)
     var a = document.createElement("a");
     a.id=items[i];
     a.appendChild(tagLabel);
-    a.addEventListener("click",function(event){ls.getData("TASKLIST",getTasksByTag,event.target.id);});
+    a.addEventListener("click",function(event)
+                               {
+                                 console.log(ls.data.USER);
+                                 ls.data.USER.setActiveTag(event.target.id);
+                                 ls.getData("TASKLIST",getTasksByTag,event.target.id);
+                               }
+                      );
     li.appendChild(a);
     ul.appendChild(li);
   }
@@ -183,7 +192,8 @@ function makeMenu(items,ls)
 
 function getTasksByTag(items,ls,tag)
 {
-  if(!tag)
+  console.trace(tag);
+  if(!tag || tag == null)
   {
     tag = "all";
   }

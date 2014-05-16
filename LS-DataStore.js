@@ -6,14 +6,38 @@ function LocalStore(callback)
 LocalStore.prototype.getUser = function(callback)
 {
   var ls = this;
-  chrome.storage.local.get('USER',function(result){ls.data.USER = result.USER;callback(!!Object.keys(result).length);});
+  chrome.storage.local.get('USER',function(result)
+                                  {
+                                    ls.data.USER = reconstitute("USER",result.USER);
+//                                    console.log(ls.data.USER);
+                                    callback(!!Object.keys(result).length);
+                                  }
+                          );
+  function reconstitute(object,value)
+  {
+//    console.log(object);
+    if(object == "USER")
+    {
+      var tempUser = new User(value.name);
+      for(var i in value)
+      {
+        tempUser[i] = value[i];
+      }
+//      console.log(tempUser);
+      value = tempUser;
+    }
+    return value;
+  }
+
 }
 
 LocalStore.prototype.setDefaults = function(callback)
 {
   var ls = this;
-  ls.data.USER = {"name" : "user1"};
+  ls.data.USER = new User("user1");
 
+  console.log(ls.data.USER);
+  
   ls.data.TAGS = [];
   ls.data.TAGS.push("all");
   ls.data.TAGS.push("work");
@@ -79,6 +103,13 @@ LocalStore.prototype.getData = function(key,callback,args)
   {
     if(object == "USER")
     {
+      var tempUser = new User(value.name);
+      for(var i in value)
+      {
+        tempUser[i] = value[i];
+      }
+      console.log(tempUser);
+      value = tempUser;
     }
     else if(object == "TASKLIST")
     {
@@ -165,6 +196,14 @@ LocalStore.prototype.dumpData = function(callback)
 
 LocalStore.prototype.importData = function(input)
 {
-  this.data = input;
+//  console.log(Object.prototype.toString.call(input));
+  if(Object.prototype.toString.call(input) == "[object Object]")
+  {
+    this.data = input;
+  }
+  else
+  {
+    console.log(input);
+  }
   this.setData();
 }
