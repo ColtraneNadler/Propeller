@@ -47,6 +47,7 @@ window.onload = function()
 //                                                                console.log(data);
                                                                 ls.importData(data);
 //                                                                ls.importData(event.target.value);
+                                                                ls.getData('TASKLIST',getTasksByTag,"all");
                                                               }
                                                   );
   
@@ -64,7 +65,7 @@ window.onload = function()
       console.log(ls.data.USER);
       console.log(ls.data.USER.getActiveTag());
       ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
-//      ls.getData('TAGS',printTags);
+      ls.getData('TAGS',printTags);
     }
   }
 }

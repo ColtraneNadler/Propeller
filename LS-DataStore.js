@@ -8,11 +8,17 @@ LocalStore.prototype.getUser = function(callback)
   var ls = this;
   chrome.storage.local.get('USER',function(result)
                                   {
-                                    ls.data.USER = reconstitute("USER",result.USER);
+//                                    ls.data.USER = reconstitute("USER",result.USER);
 //                                    console.log(ls.data.USER);
+                                    console.log(Object.keys(result).length);
+                                    if(Object.keys(result).length == 1)
+                                    {
+                                      ls.data.USER = reconstitute("USER",result.USER);
+                                    }
                                     callback(!!Object.keys(result).length);
                                   }
                           );
+  
   function reconstitute(object,value)
   {
 //    console.log(object);
@@ -72,12 +78,6 @@ LocalStore.prototype.setDefaults = function(callback)
   task.addTag("all");
   task.addTag("other");
   ls.data.TASKLIST.push(task);
-
-//  ls.data.TASKLIST.push(new Task("create to do list app"));
-//  ls.data.TASKLIST.push(new Task("add things to list"));
-//  ls.data.TASKLIST.push(new Task("??????????????????"));
-//  ls.data.TASKLIST.push(new Task("profit"));
-//  ls.data.TASKLIST.push(new Task("share propeller"));
   
   chrome.storage.local.set(ls.data,returnDefaults);
   
@@ -199,11 +199,57 @@ LocalStore.prototype.importData = function(input)
 //  console.log(Object.prototype.toString.call(input));
   if(Object.prototype.toString.call(input) == "[object Object]")
   {
-    this.data = input;
+    for(var i in input.TAGS)
+    {
+//      console.log(this);
+      if(this.data.TAGS.indexOf(input.TAGS[i]) == -1)
+      {
+//        console.trace(input.TAGS[i]);
+        this.data.TAGS.push(input.TAGS[i]);
+      }
+    }
+    for(var i in input.TASKLIST)
+    {
+      if(isUniqueTask(input.TASKLIST[i],this.data.TASKLIST))
+      {
+        var tempTask = new Task(input.TASKLIST[i].label);
+        for(var j in input.TASKLIST[i])
+        {
+          tempTask[j] = input.TASKLIST[i][j];
+        }
+        console.trace(tempTask);
+        if(tempTask.tags.length == 0)
+        {
+          tempTask.addTag("other");
+        }
+        if(tempTask.getComplete())
+        {
+          tempTask.addTag("completed");
+        }
+        tempTask.addTag("all");
+        this.data.TASKLIST.push(tempTask);
+      }
+    }
+//    this.data = input;
   }
   else
   {
     console.log(input);
   }
   this.setData();
+  
+  function isUniqueTask(task,taskList)
+  {
+    var unique = true;
+    var m = 0;
+//    console.log(taskList);
+    while(unique && m < taskList.length)
+    {
+      unique = (!taskList[m].getLabel().localeCompare(task.label) == 0);
+//      console.log(taskList[m].getLabel() + " AND " + task.label + " ARE " + unique);
+      m++;
+    }
+//    console.log(unique);
+    return unique;
+  }
 }
