@@ -151,7 +151,12 @@ function printTags(items,ls)
     
     var a = document.createElement("a");
     a.id = i;
-    a.onclick = function(event){document.getElementById(event.target.id).parentNode.style.display = "none"; ls.deleteItem("TAGS",event.target.id);console.log(event.target.id);};
+    a.onclick = function(event)
+                {
+                  document.getElementById(event.target.id).parentNode.style.display = "none";   
+                  ls.deleteItem("TAGS",event.target.id);
+                  console.log(event.target.id);
+                };
     var remove = document.createTextNode("[ X ]");
     a.appendChild(remove);
     li.appendChild(a);
@@ -208,11 +213,15 @@ function getTasksByTag(items,ls,tag)
   {
     if(items[i].tags.indexOf(tag) != -1 && (tag == "completed" || items[i].tags.indexOf("completed") == -1))
     {
-//      if(items[i].deleted != true)
-//      {
+      if(items[i].deleted != true)
+      {
         console.log(items[i].deleted);
-        tasks.push(items[i]);
-//      }
+        tasks[i] = items[i];
+      }
+      else
+      {
+        console.log(i);
+      }
     }
   }
   printTasks(tasks,ls);
@@ -248,14 +257,11 @@ function printTasks(items,ls)
     
     var taskText = document.createTextNode(items[i].label)
     var a = document.createElement("a");
-//    a.id = items[i].id;
+    a.id = i;//items[i].id;
     a.addEventListener("click",function(event)
                                {
-                                 console.log(event.target);
                                  document.getElementById(event.target.id).parentNode.style.display = "none";
-//                                 ls.deleteItem("TASKLIST",event.target.id);
-//                                ls.data.TASKLIST[event.target.id].deleted = true;
-//                                 console.log(event.target.id); 
+                                 ls.data.TASKLIST[event.target.id].deleted = true;
                                  ls.setData();
                                }
                        );
