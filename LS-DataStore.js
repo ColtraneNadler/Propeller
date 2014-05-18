@@ -8,8 +8,6 @@ LocalStore.prototype.getUser = function(callback)
   var ls = this;
   chrome.storage.local.get('USER',function(result)
                                   {
-//                                    ls.data.USER = reconstitute("USER",result.USER);
-//                                    console.log(ls.data.USER);
                                     console.log(Object.keys(result).length);
                                     if(Object.keys(result).length == 1)
                                     {
@@ -21,7 +19,6 @@ LocalStore.prototype.getUser = function(callback)
   
   function reconstitute(object,value)
   {
-//    console.log(object);
     if(object == "USER")
     {
       var tempUser = new User(value.name);
@@ -29,7 +26,6 @@ LocalStore.prototype.getUser = function(callback)
       {
         tempUser[i] = value[i];
       }
-//      console.log(tempUser);
       value = tempUser;
     }
     return value;
@@ -41,8 +37,6 @@ LocalStore.prototype.setDefaults = function(callback)
 {
   var ls = this;
   ls.data.USER = new User("user1");
-
-  console.log(ls.data.USER);
   
   ls.data.TAGS = [];
   ls.data.TAGS.push("all");
@@ -83,7 +77,6 @@ LocalStore.prototype.setDefaults = function(callback)
   
   function returnDefaults()
   {
-//    console.log(ls.data);
     callback(ls.data.TASKLIST,ls);
   }
 }
@@ -135,6 +128,7 @@ LocalStore.prototype.getData = function(key,callback,args)
       var tempTask = new Task(value.label);
       for(var i in value)
       {
+//        if(i != "deleted")
         tempTask[i] = value[i];
       }
       value = tempTask;
@@ -196,15 +190,12 @@ LocalStore.prototype.dumpData = function(callback)
 
 LocalStore.prototype.importData = function(input)
 {
-//  console.log(Object.prototype.toString.call(input));
   if(Object.prototype.toString.call(input) == "[object Object]")
   {
     for(var i in input.TAGS)
     {
-//      console.log(this);
       if(this.data.TAGS.indexOf(input.TAGS[i]) == -1)
       {
-//        console.trace(input.TAGS[i]);
         this.data.TAGS.push(input.TAGS[i]);
       }
     }
@@ -230,7 +221,6 @@ LocalStore.prototype.importData = function(input)
         this.data.TASKLIST.push(tempTask);
       }
     }
-//    this.data = input;
   }
   else
   {
@@ -242,14 +232,11 @@ LocalStore.prototype.importData = function(input)
   {
     var unique = true;
     var m = 0;
-//    console.log(taskList);
     while(unique && m < taskList.length)
     {
       unique = (!taskList[m].getLabel().localeCompare(task.label) == 0);
-//      console.log(taskList[m].getLabel() + " AND " + task.label + " ARE " + unique);
       m++;
     }
-//    console.log(unique);
     return unique;
   }
 }

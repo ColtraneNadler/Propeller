@@ -9,12 +9,29 @@ window.onload = function()
   var showMenu = document.getElementById("showMenu");
   var hideMenu = document.getElementById("hideMenu");
   var tagsMenu = document.getElementById("tagsMenu");
+  var dumpSpace = document.getElementById("dump");
+  var clickToImport = document.getElementById("importMenu");
   
   addTask.style.display = "none";
   hideAddTask.style.display = "none";
   hideMenu.style.display = "none";
   tagsMenu.style.display = "none";
+  dumpSpace.style.display = "none";
 
+  clickToImport.addEventListener("click",function(event)
+                                         {
+                                           ls.dumpData(dump);                                           
+                                           if(dumpSpace.style.display == "none")
+                                           {
+                                             dumpSpace.style.display = "inline-block";
+                                           }
+                                           else
+                                           {
+                                             dumpSpace.style.display = "none";
+                                           }
+                                         }
+                                );
+  
   showAddTask.addEventListener("click",function(event)
                                        {
                                          ls.getData('TAGS',printTags);
@@ -42,11 +59,8 @@ window.onload = function()
                             );
   document.getElementById("dump").addEventListener("dblclick",function(event)
                                                               {
-//                                                                console.log("event detected");
                                                                 var data  = JSON.parse(event.target.value);
-//                                                                console.log(data);
                                                                 ls.importData(data);
-//                                                                ls.importData(event.target.value);
                                                                 ls.getData('TASKLIST',getTasksByTag,"all");
                                                               }
                                                   );
@@ -58,7 +72,6 @@ window.onload = function()
     if(!exists)
     {
       return ls.setDefaults(getTasksByTag);
-//      return ls.setDefaults(printTasks); 
     }
     else
     {
@@ -69,9 +82,6 @@ window.onload = function()
     }
   }
 }
-
-ls.dumpData(dump);
-//ls.dumpData(ls.importData);
 
 function createTask(event)
 {
@@ -90,12 +100,10 @@ function createTask(event)
       {
         if(tags[i].firstChild.checked)
         {
-//          console.log(tags[i].id);
           task.addTag(tags[i].id);
         }
       }
       task.addTag("all");
-//      console.log(task);
       ls.addItem("TASKLIST",task,printTasks);
       event.target.value = null;
     }
@@ -150,12 +158,10 @@ function printTags(items,ls)
     
     ul.appendChild(li);
   }
-//  var li = document.createElement("li");
   var createTag = document.createElement("input");
   createTag.setAttribute('type','text');
   createTag.id = "tagLabel";
   createTag.onkeydown = addTag;
-//  li.appendChild(createTag);
   ul.appendChild(li);
   tagList.appendChild(ul);
   tagList.appendChild(createTag);
@@ -188,7 +194,6 @@ function makeMenu(items,ls)
     ul.appendChild(li);
   }
   tagList.appendChild(ul);
-//  getTasksByTag();
 }
 
 function getTasksByTag(items,ls,tag)
@@ -203,18 +208,18 @@ function getTasksByTag(items,ls,tag)
   {
     if(items[i].tags.indexOf(tag) != -1 && (tag == "completed" || items[i].tags.indexOf("completed") == -1))
     {
-      tasks.push(items[i]);      
+//      if(items[i].deleted != true)
+//      {
+        console.log(items[i].deleted);
+        tasks.push(items[i]);
+//      }
     }
-//    console.log(items[i].tags.indexOf("#houston"));
   }
-//  console.log(tasks);
-//  return tasks;
   printTasks(tasks,ls);
 }
 
 function printTasks(items,ls)
 {
-//  console.log(items);
   var todoList = document.getElementById('taskList');
   while(todoList.firstChild)
   {
@@ -223,26 +228,43 @@ function printTasks(items,ls)
   var ul = document.createElement("ul");
   for(var i in items)
   {
-//    if(!items[i].complete)
-//    {
     var li = document.createElement("li");
-//    li.id = taskList[i].getLabel();
-//    li.draggable = true;
+    
     var taskCheck = document.createElement("input");
     taskCheck.setAttribute('type','checkbox');
     taskCheck.id = "check"+i;
-    taskCheck.onchange = function(event){document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through"; document.getElementById(event.target.id).style.display = "none";console.log(event.target.id.substr("check".length));ls.data.TASKLIST[event.target.id.substr("check".length)].setComplete(true);ls.data.TASKLIST[event.target.id.substr("check".length)].addTag("completed");ls.setData();};
+    taskCheck.onchange = function(event)
+                         {
+                           document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through";
+                           document.getElementById(event.target.id).style.display = "none";
+                           console.log(event.target.id.substr("check".length));
+                           ls.data.TASKLIST[event.target.id.substr("check".length)].setComplete(true);
+                           ls.data.TASKLIST[event.target.id.substr("check".length)].addTag("completed");
+                           ls.setData();
+                         };
+
     li.appendChild(taskCheck);
+
+    
     var taskText = document.createTextNode(items[i].label)
     var a = document.createElement("a");
-    a.id = i;
-    a.onclick = function(event){document.getElementById(event.target.id).parentNode.style.display = "none";ls.deleteItem("TASKLIST",event.target.id);console.log(event.target.id);};
+//    a.id = items[i].id;
+    a.addEventListener("click",function(event)
+                               {
+                                 console.log(event.target);
+                                 document.getElementById(event.target.id).parentNode.style.display = "none";
+//                                 ls.deleteItem("TASKLIST",event.target.id);
+//                                ls.data.TASKLIST[event.target.id].deleted = true;
+//                                 console.log(event.target.id); 
+                                 ls.setData();
+                               }
+                       );
     var remove = document.createTextNode("[ X ]");
+
     a.appendChild(remove);
     li.appendChild(taskText);
     li.appendChild(a);
     ul.appendChild(li);
-//    }
   }
   todoList.appendChild(ul);
 }
@@ -255,7 +277,6 @@ function printWorld(items)
 function showTagMenu(event)
 {
   ls.getData('TAGS',makeMenu);
-//  ls.getData('TASKLIST',getTasksByTag,"#houston");
   document.getElementById("tagsMenu").style.display = "inline-block";
   document.getElementById("hideMenu").style.display = "inline-block";
   document.getElementById("showMenu").style.display = "none";

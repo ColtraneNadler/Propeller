@@ -11,6 +11,8 @@ function Task(label)
   
   this.creationTime = new Date().getTime();
   this.completionTime = null;
+  
+  this.deleted = false;
 }
 Task.prototype.setTimer = function(timer)
 {
