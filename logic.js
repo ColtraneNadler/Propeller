@@ -145,10 +145,13 @@ function printTags(items,ls)
     li.id = items[i];
     var tagCheck = document.createElement("input");
     tagCheck.setAttribute('type','checkbox');
+    if(ls.data.USER.getActiveTag() == items[i])
+    {
+      tagCheck.checked = true;
+    }
     var tagLabel = document.createTextNode(items[i].replace(/_/g," "));
     li.appendChild(tagCheck);
     li.appendChild(tagLabel);
-    
     var a = document.createElement("a");
     a.id = i;
     a.onclick = function(event)
