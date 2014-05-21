@@ -105,6 +105,7 @@ function createTask(event)
       }
       task.addTag("all");
       ls.addItem("TASKLIST",task,printTasks);
+      
       event.target.value = null;
     }
   }
@@ -259,9 +260,21 @@ function printTasks(items,ls)
 
     
     var taskText = document.createTextNode(items[i].label)
-    var a = document.createElement("a");
-    a.id = i;//items[i].id;
-    a.addEventListener("click",function(event)
+
+    var editLink = document.createElement("a");
+    editLink.id = "edit"+i;
+    editLink.addEventListener("click",function(event)
+                                      {
+//                                        document.getElementById("taskLabel").value = document.getElementById(event.target.id).parentNode.innerText.substr(0,document.getElementById(event.target.id).parentNode.innerText.length - "[ EDIT ][ X ]".length); 
+//                                        console.log(event.target.id.substr("edit".length));
+//                                        showTaskForm(event,event.target.id.substr("edit".length));
+                                      }
+                             );
+    var edit = document.createTextNode("[ EDIT ]");
+    
+    var removeLink = document.createElement("a");
+    removeLink.id = i;//items[i].id;
+    removeLink.addEventListener("click",function(event)
                                {
                                  document.getElementById(event.target.id).parentNode.style.display = "none";
                                  ls.data.TASKLIST[event.target.id].deleted = true;
@@ -269,10 +282,31 @@ function printTasks(items,ls)
                                }
                        );
     var remove = document.createTextNode("[ X ]");
-
-    a.appendChild(remove);
+    
+    editLink.appendChild(edit);
+    removeLink.appendChild(remove);
     li.appendChild(taskText);
-    li.appendChild(a);
+    li.appendChild(editLink);
+    li.appendChild(removeLink);
+    li.addEventListener("dblclick",function(event)
+                                   {
+                                     var tarmac = document.getElementById("activeItem");
+                                     while(tarmac.firstChild)
+                                     {
+                                       todoList.appendChild(tarmac.firstChild);                                       
+//                                       tarmac.removeChild(tarmac.firstChild);
+                                     }
+                                     tarmac.appendChild(event.target);
+//                                     event.target.removeEventListener("dblclick",arguments.callee);
+//                                     event.target.addEventListener("dblclick",function(event)
+//                                                                              {
+//                                                                                todoList.appendChild(event.target);
+//                                                                                event.target.removeEventListener("dblclick",arguments.callee);                                     
+//                                                                              }
+//                                                                  );
+//                                     console.log(event.target);
+                                   }
+                       );
     ul.appendChild(li);
   }
   todoList.appendChild(ul);
@@ -298,8 +332,12 @@ function hideTagMenu(event)
   document.getElementById("showMenu").style.display = "inline-block";
 }
 
-function showTaskForm(event)
+function showTaskForm(event,task)
 {
+  if(task)
+  {
+//    console.log(task);    
+  }
   document.getElementById("addTask").style.display = "inline-block";
   document.getElementById("hideAddTask").style.display = "inline-block";
   document.getElementById("showAddTask").style.display = "none";
