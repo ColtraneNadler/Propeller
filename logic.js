@@ -75,13 +75,25 @@ window.onload = function()
     }
     else
     {
-      console.log(ls.data.USER);
-      console.log(ls.data.USER.getActiveTag());
+//      console.log(ls.data.USER);
+//      console.log(ls.data.USER.getActiveTag());
+//      console.log(ls.data.USER.getActiveTask());
+      document.getElementById("activeItem");
       ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
       ls.getData('TAGS',printTags);
+      console.log(ls.data.USER.getActiveTask());
+      ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
     }
   }
 }
+
+function getActiveTaskFromTasklist(tasklist,ls,activeTask)
+{
+//  console.log(activeTask);
+  document.getElementById("activeItem").innerText = tasklist[activeTask].label;
+}
+
+//document.getElementById("activeTask").innerText = ls.data.TASKLIST[ls.data.USER.getActiveTask()].label;
 
 function createTask(event)
 {
@@ -157,7 +169,7 @@ function printTags(items,ls)
     a.id = i;
     a.onclick = function(event)
                 {
-                  document.getElementById(event.target.id).parentNode.style.display = "none";   
+                  document.getElementById(event.target.id).parentNode.style.display = "none";
                   ls.deleteItem("TAGS",event.target.id);
                   console.log(event.target.id);
                 };
@@ -207,7 +219,7 @@ function makeMenu(items,ls)
 
 function getTasksByTag(items,ls,tag)
 {
-  console.trace(tag);
+//  console.trace(tag);
   if(!tag || tag == null)
   {
     tag = "all";
@@ -219,12 +231,12 @@ function getTasksByTag(items,ls,tag)
     {
       if(items[i].deleted != true)
       {
-        console.log(items[i].deleted);
+//        console.log(items[i].deleted);
         tasks[i] = items[i];
       }
       else
       {
-        console.log(i);
+//        console.log(i);
       }
     }
   }
@@ -242,6 +254,7 @@ function printTasks(items,ls)
   for(var i in items)
   {
     var li = document.createElement("li");
+    li.id = i;
     
     var taskCheck = document.createElement("input");
     taskCheck.setAttribute('type','checkbox');
@@ -290,10 +303,11 @@ function printTasks(items,ls)
     li.appendChild(removeLink);
     li.addEventListener("dblclick",function(event)
                                    {
+                                     ls.data.USER.setActiveTask(event.target.id);
                                      var tarmac = document.getElementById("activeItem");
                                      while(tarmac.firstChild)
                                      {
-                                       todoList.appendChild(tarmac.firstChild);                                       
+                                       todoList.appendChild(tarmac.firstChild);                         
 //                                       tarmac.removeChild(tarmac.firstChild);
                                      }
                                      tarmac.appendChild(event.target);
@@ -304,7 +318,8 @@ function printTasks(items,ls)
 //                                                                                event.target.removeEventListener("dblclick",arguments.callee);                                     
 //                                                                              }
 //                                                                  );
-//                                     console.log(event.target);
+                                     console.log(event.target.id);
+                                     ls.setData();
                                    }
                        );
     ul.appendChild(li);
