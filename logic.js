@@ -116,7 +116,7 @@ function createTask(event)
         }
       }
       task.addTag("all");
-      ls.addItem("TASKLIST",task,printTasks);
+      ls.addItem("TASKLIST",task,getTasksByTag,ls.data.USER.getActiveTag());
       
       event.target.value = null;
     }
@@ -227,7 +227,7 @@ function getTasksByTag(items,ls,tag)
   var tasks = [];
   for(var i in items)
   {
-    if(items[i].tags.indexOf(tag) != -1 && (tag == "completed" || items[i].tags.indexOf("completed") == -1))
+    if(items[i].tags.indexOf(tag) != -1 && (tag == "completed" || items[i].tags.indexOf("completed") == -1) && i != ls.data.USER.getActiveTask())
     {
       if(items[i].deleted != true)
       {
@@ -286,11 +286,11 @@ function printTasks(items,ls)
     var edit = document.createTextNode("[ EDIT ]");
     
     var removeLink = document.createElement("a");
-    removeLink.id = i;//items[i].id;
+    removeLink.id = "remove"+i;//items[i].id;
     removeLink.addEventListener("click",function(event)
                                {
                                  document.getElementById(event.target.id).parentNode.style.display = "none";
-                                 ls.data.TASKLIST[event.target.id].deleted = true;
+                                 ls.data.TASKLIST[event.target.id.substr("remove".length)].deleted = true;
                                  ls.setData();
                                }
                        );
@@ -307,19 +307,14 @@ function printTasks(items,ls)
                                      var tarmac = document.getElementById("activeItem");
                                      while(tarmac.firstChild)
                                      {
-                                       todoList.appendChild(tarmac.firstChild);                         
-//                                       tarmac.removeChild(tarmac.firstChild);
+//                                       todoList.appendChild(tarmac.firstChild);                         
+                                       tarmac.removeChild(tarmac.firstChild);
                                      }
-                                     tarmac.appendChild(event.target);
-//                                     event.target.removeEventListener("dblclick",arguments.callee);
-//                                     event.target.addEventListener("dblclick",function(event)
-//                                                                              {
-//                                                                                todoList.appendChild(event.target);
-//                                                                                event.target.removeEventListener("dblclick",arguments.callee);                                     
-//                                                                              }
-//                                                                  );
-                                     console.log(event.target.id);
+//                                     tarmac.appendChild(event.target);
+                                     ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
+//                                     console.log(event.target.id);
                                      ls.setData();
+                                     ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
                                    }
                        );
     ul.appendChild(li);

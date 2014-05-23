@@ -8,7 +8,7 @@ LocalStore.prototype.getUser = function(callback)
   var ls = this;
   chrome.storage.local.get('USER',function(result)
                                   {
-                                    console.log(Object.keys(result).length);
+//                                    console.log(Object.keys(result).length);
                                     if(Object.keys(result).length == 1)
                                     {
                                       ls.data.USER = reconstitute("USER",result.USER);
@@ -144,7 +144,7 @@ LocalStore.prototype.deleteItem = function(key,value,callback)
   chrome.storage.local.set(this.data);
 }
 
-LocalStore.prototype.addItem = function(key,value,callback)
+LocalStore.prototype.addItem = function(key,value,callback,args)
 {
   var ls = this;
   this.data[key].push(value);
@@ -152,7 +152,7 @@ LocalStore.prototype.addItem = function(key,value,callback)
   
   function returnData()
   {
-    callback(ls.data[key],ls);
+    callback(ls.data[key],ls,args);
   }
 }
 
