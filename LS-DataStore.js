@@ -30,7 +30,6 @@ LocalStore.prototype.getUser = function(callback)
     }
     return value;
   }
-
 }
 
 LocalStore.prototype.setDefaults = function(callback)

@@ -90,7 +90,75 @@ window.onload = function()
 function getActiveTaskFromTasklist(tasklist,ls,activeTask)
 {
 //  console.log(activeTask);
-  document.getElementById("activeItem").innerText = tasklist[activeTask].label;
+  var activeItem = document.getElementById("activeItem");
+  if(activeTask && activeTask != null) {
+//  activeItem.innerText = tasklist[activeTask].label;
+
+  var taskCheck = document.createElement("input");
+  taskCheck.setAttribute('type','checkbox');
+  taskCheck.id = "check";
+  taskCheck.onchange = function(event)
+                       {
+                         document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through";
+                         document.getElementById(event.target.id).style.display = "none";
+                         ls.data.TASKLIST[activeTask].setComplete(true);
+                         ls.data.TASKLIST[activeTask].addTag("completed");
+                         ls.data.USER.setActiveTask(null);
+                         ls.setData();
+                         ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
+                         ls.getData('TAGS',printTags);
+                         ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
+                       };
+  activeItem.appendChild(taskCheck);
+
+  var taskText = document.createTextNode(tasklist[activeTask].label);
+
+  var editLink = document.createElement("a");
+  editLink.id = "edit";
+  editLink.addEventListener("click",function(event)
+                                    {
+//                                      document.getElementById("taskLabel").value = document.getElementById(event.target.id).parentNode.innerText.substr(0,document.getElementById(event.target.id).parentNode.innerText.length - "[ EDIT ][ X ]".length); 
+//                                      console.log(event.target.id.substr("edit".length));
+//                                      showTaskForm(event,event.target.id.substr("edit".length));
+                                    }
+                           );
+  var edit = document.createTextNode("[ EDIT ]");
+    
+  var removeLink = document.createElement("a");
+  removeLink.id = "remove";//items[i].id;
+  removeLink.addEventListener("click",function(event)
+                                      {
+                                        document.getElementById(event.target.id).parentNode.innerHTML = null;
+//                                        document.getElementById(event.target.id).parentNode.style.display = "none";
+                                        ls.data.TASKLIST[activeTask].deleted = true;
+                                        ls.data.USER.setActiveTask(null);
+                                        ls.setData();
+//                                        ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
+//                                        ls.getData('TAGS',printTags);
+//                                        ls.getData('TASKLIST',getActiveTaskFromTasklist,null);   
+//                                        activeItem.style.display = "block";
+                                      }
+                             );
+  var remove = document.createTextNode("[ X ]");
+  
+  editLink.appendChild(edit);
+  removeLink.appendChild(remove);
+  activeItem.appendChild(taskText);
+  activeItem.appendChild(editLink);
+  activeItem.appendChild(removeLink);
+  activeItem.addEventListener("dblclick",function(event)
+                                         {
+                                           ls.data.USER.setActiveTask(null);
+                                           ls.setData();
+                                           document.getElementById(event.target.id).innerHTML = null;
+                                           ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
+//                                           console.log(event.target.id);
+//                                           ls.setData();
+//                                           ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
+                                         }
+                             );
+  }
+  activeItem.style.display = "block";
 }
 
 //document.getElementById("activeTask").innerText = ls.data.TASKLIST[ls.data.USER.getActiveTask()].label;
