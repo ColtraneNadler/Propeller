@@ -91,6 +91,9 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
 {
 //  console.log(activeTask);
   var activeItem = document.getElementById("activeItem");
+  while(activeItem.firstChild) {
+    activeItem.removeChild(activeItem.firstChild);
+  }
   if(activeTask && activeTask != null) {
 //  activeItem.innerText = tasklist[activeTask].label;
 
@@ -346,6 +349,7 @@ function printTasks(items,ls)
     editLink.id = "edit"+i;
     editLink.addEventListener("click",function(event)
                                       {
+                                        showEditForm(event,i);
 //                                        document.getElementById("taskLabel").value = document.getElementById(event.target.id).parentNode.innerText.substr(0,document.getElementById(event.target.id).parentNode.innerText.length - "[ EDIT ][ X ]".length); 
 //                                        console.log(event.target.id.substr("edit".length));
 //                                        showTaskForm(event,event.target.id.substr("edit".length));
@@ -426,4 +430,35 @@ function hideTaskForm(event)
   document.getElementById("addTask").style.display = "none";
   document.getElementById("hideAddTask").style.display = "none";
   document.getElementById("showAddTask").style.display = "inline-block";
+}
+
+function showEditForm(event,task)
+{
+  console.log(event.target.id.substr("edit".length));
+  var editTaskForm = document.getElementById("editTask");
+  while(editTaskForm.firstChild) {
+    editTaskForm.removeChild(editTaskForm.firstChild);
+  }
+  var task = event.target.id.substr("edit".length);
+  var targetTask = document.createTextNode(event.target.id.substr("edit".length));
+  var taskLabel = document.createElement("input");
+  taskLabel.setAttribute('type','text');
+  taskLabel.setAttribute('value',ls.data.TASKLIST[event.target.id.substr("edit".length)].label);
+  taskLabel.addEventListener("keydown",function(event){editTask(event,task);});
+//  editTaskForm.appendChild(targetTask);
+  editTaskForm.appendChild(taskLabel);
+}
+
+function editTask(event,task)
+{
+//  console.log(task);
+  if(event.keyCode == 13)
+  {
+    ls.data.TASKLIST[task].setLabel(event.target.value);
+    console.log(event.target);
+    ls.setData();
+    ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
+    ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
+    event.target.parentNode.removeChild(event.target);
+  }  
 }
