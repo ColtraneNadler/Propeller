@@ -240,9 +240,9 @@ function printTags(items,ls)
     a.id = i;
     a.onclick = function(event)
                 {
-                  document.getElementById(event.target.id).parentNode.style.display = "none";
-                  ls.deleteItem("TAGS",event.target.id);
-                  console.log(event.target.id);
+//                  document.getElementById(event.target.id).parentNode.style.display = "none";
+//                  ls.deleteItem("TAGS",event.target.id);
+//                  console.log(event.target.id);
                 };
     var remove = document.createTextNode("[ X ]");
     a.appendChild(remove);
@@ -445,8 +445,33 @@ function showEditForm(event,task)
   taskLabel.setAttribute('type','text');
   taskLabel.setAttribute('value',ls.data.TASKLIST[event.target.id.substr("edit".length)].label);
   taskLabel.addEventListener("keydown",function(event){editTask(event,task);});
+  var tags = ls.data.TAGS;
+  var tagList = document.createElement("ul");
+  tagList.id = "editTags";
+  for(var i in tags)
+  {
+    if(tags[i] != "all")
+    {
+      var tag = document.createElement("li");
+      var tagCheck = document.createElement("input");
+      tagCheck.setAttribute('type','checkbox');
+      if(ls.data.TASKLIST[event.target.id.substr("edit".length)].isTag(tags[i]))
+      {
+        tagCheck.checked = true;
+      }
+      tag.appendChild(tagCheck);
+      tag.appendChild(document.createTextNode(tags[i]));
+      tagList.appendChild(tag);
+    }
+  }
 //  editTaskForm.appendChild(targetTask);
   editTaskForm.appendChild(taskLabel);
+  editTaskForm.appendChild(tagList);
+}
+
+function returnWorld(items)
+{
+  return items;
 }
 
 function editTask(event,task)
@@ -454,11 +479,30 @@ function editTask(event,task)
 //  console.log(task);
   if(event.keyCode == 13)
   {
+    var editTags = document.getElementById("editTags");
+    var tags = editTags.getElementsByTagName("li");
+    for(var i = 0; i < tags.length; i++)
+    {
+      if(tags[i].firstChild.checked && !ls.data.TASKLIST[task].isTag(tags[i].innerText))
+      {
+        ls.data.TASKLIST[task].addTag(tags[i].innerText);
+      }
+      else if(!tags[i].firstChild.checked && ls.data.TASKLIST[task].isTag(tags[i].innerText))
+      {
+        ls.data.TASKLIST[task].removeTag(tags[i]);
+      }
+//      console.log(tags[i].innerText);
+//      console.log(tags[i].firstChild);
+    }
     ls.data.TASKLIST[task].setLabel(event.target.value);
-    console.log(event.target);
+//    console.log(event.target);
+//    console.log(tasklist);
     ls.setData();
     ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
     ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
-    event.target.parentNode.removeChild(event.target);
-  }  
+    while(event.target.parentNode)
+    {
+      event.target.parentNode.removeChild(event.target.parentNode.lastChild);
+    }
+  }
 }
