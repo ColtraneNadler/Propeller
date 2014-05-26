@@ -80,7 +80,7 @@ Task.prototype.addTag = function(tag)
 }
 Task.prototype.removeTag = function(tag)
 {
-  this.tags.splice(tag,1);
+  this.tags.splice(this.tags.indexOf(tag),1);
 }
 Task.prototype.isTag = function(tag)
 {

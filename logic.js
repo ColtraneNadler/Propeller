@@ -240,9 +240,13 @@ function printTags(items,ls)
     a.id = i;
     a.onclick = function(event)
                 {
-//                  document.getElementById(event.target.id).parentNode.style.display = "none";
-//                  ls.deleteItem("TAGS",event.target.id);
-//                  console.log(event.target.id);
+                  if(ls.data.USER.getActiveTag() == event.target.parentNode.innerText.substr(0,event.target.parentNode.innerText.length - "[ X ]".length)) {
+                    ls.data.USER.setActiveTag("all");
+                  }
+                  document.getElementById(event.target.id).parentNode.style.display = "none";
+                  ls.deleteItem("TAGS",event.target.id);
+                  ls.getData('TASKLIST',removeTagsFromTasks,event.target.parentNode.innerText.substr(0,event.target.parentNode.innerText.length - "[ X ]".length));
+                  ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
                 };
     var remove = document.createTextNode("[ X ]");
     a.appendChild(remove);
@@ -257,6 +261,19 @@ function printTags(items,ls)
   ul.appendChild(li);
   tagList.appendChild(ul);
   tagList.appendChild(createTag);
+}
+function removeTagsFromTasks(items,ls,tag)
+{
+  console.log("removing " + tag + " tag.");
+  for(var i in items) {
+    if(tag != "all" && tag != "other" && tag != "completed" && items[i].tags.indexOf(tag) != -1 && !items[i].complete) {
+      items[i].tags.splice(items[i].tags.indexOf(tag), 1);
+      console.log(items[i]);
+    }
+  }
+//  console.log(items);
+  ls.data.TASKLIST = items;
+  ls.setData();
 }
 
 function makeMenu(items,ls)
