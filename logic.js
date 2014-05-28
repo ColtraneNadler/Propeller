@@ -343,69 +343,74 @@ function printTasks(items,ls)
   {
     var li = document.createElement("li");
     li.id = i;
-    
-    var taskCheck = document.createElement("input");
-    taskCheck.setAttribute('type','checkbox');
-    taskCheck.id = "check"+i;
-    taskCheck.onchange = function(event)
-                         {
-                           document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through";
-                           document.getElementById(event.target.id).style.display = "none";
-                           console.log(event.target.id.substr("check".length));
-                           ls.data.TASKLIST[event.target.id.substr("check".length)].setComplete(true);
-                           ls.data.TASKLIST[event.target.id.substr("check".length)].addTag("completed");
-                           ls.setData();
-                         };
+    if(!items[i].complete) {
+      var taskCheck = document.createElement("input");
+      taskCheck.setAttribute('type','checkbox');
+      taskCheck.id = "check"+i;
+      taskCheck.onchange = function(event)
+                           {
+                             document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through";
+                             document.getElementById(event.target.id).style.display = "none";
+                             console.log(event.target.id.substr("check".length));
+                             ls.data.TASKLIST[event.target.id.substr("check".length)].setComplete(true);
+                             ls.data.TASKLIST[event.target.id.substr("check".length)].addTag("completed");
+                             ls.setData();
+                           };
 
-    li.appendChild(taskCheck);
-
+      li.appendChild(taskCheck);
+    }
     
     var taskText = document.createTextNode(items[i].label)
 
-    var editLink = document.createElement("a");
-    editLink.id = "edit"+i;
-    editLink.addEventListener("click",function(event)
-                                      {
-                                        showEditForm(event,i);
-//                                        document.getElementById("taskLabel").value = document.getElementById(event.target.id).parentNode.innerText.substr(0,document.getElementById(event.target.id).parentNode.innerText.length - "[ EDIT ][ X ]".length); 
-//                                        console.log(event.target.id.substr("edit".length));
-//                                        showTaskForm(event,event.target.id.substr("edit".length));
-                                      }
-                             );
-    var edit = document.createTextNode("[ EDIT ]");
+    if(!items[i].complete) {
+      var editLink = document.createElement("a");
+      editLink.id = "edit"+i;
+      editLink.addEventListener("click",function(event)
+                                        {
+                                          showEditForm(event,i);
+//                                          document.getElementById("taskLabel").value = document.getElementById(event.target.id).parentNode.innerText.substr(0,document.getElementById(event.target.id).parentNode.innerText.length - "[ EDIT ][ X ]".length); 
+//                                          console.log(event.target.id.substr("edit".length));
+//                                          showTaskForm(event,event.target.id.substr("edit".length));
+                                        }
+                               );
+      var edit = document.createTextNode("[ EDIT ]");
     
-    var removeLink = document.createElement("a");
-    removeLink.id = "remove"+i;//items[i].id;
-    removeLink.addEventListener("click",function(event)
-                               {
-                                 document.getElementById(event.target.id).parentNode.style.display = "none";
-                                 ls.data.TASKLIST[event.target.id.substr("remove".length)].deleted = true;
-                                 ls.setData();
-                               }
-                       );
-    var remove = document.createTextNode("[ X ]");
+      var removeLink = document.createElement("a");
+      removeLink.id = "remove"+i;//items[i].id;
+      removeLink.addEventListener("click",function(event)
+                                 {
+                                   document.getElementById(event.target.id).parentNode.style.display = "none";
+                                   ls.data.TASKLIST[event.target.id.substr("remove".length)].deleted = true;
+                                   ls.setData();
+                                 }
+                         );
+      var remove = document.createTextNode("[ X ]");
     
-    editLink.appendChild(edit);
-    removeLink.appendChild(remove);
+      editLink.appendChild(edit);
+      removeLink.appendChild(remove);
+    }
     li.appendChild(taskText);
-    li.appendChild(editLink);
-    li.appendChild(removeLink);
-    li.addEventListener("dblclick",function(event)
-                                   {
-                                     ls.data.USER.setActiveTask(event.target.id);
-                                     var tarmac = document.getElementById("activeItem");
-                                     while(tarmac.firstChild)
+    if(!items[i].complete) {
+      li.appendChild(editLink);
+
+      li.appendChild(removeLink);
+      li.addEventListener("dblclick",function(event)
                                      {
-//                                       todoList.appendChild(tarmac.firstChild);                         
-                                       tarmac.removeChild(tarmac.firstChild);
+                                       ls.data.USER.setActiveTask(event.target.id);
+                                       var tarmac = document.getElementById("activeItem");
+                                       while(tarmac.firstChild)
+                                       {
+//                                         todoList.appendChild(tarmac.firstChild);                         
+                                         tarmac.removeChild(tarmac.firstChild);
+                                       }
+//                                       tarmac.appendChild(event.target);
+                                       ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
+//                                       console.log(event.target.id);
+                                       ls.setData();
+                                       ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
                                      }
-//                                     tarmac.appendChild(event.target);
-                                     ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
-//                                     console.log(event.target.id);
-                                     ls.setData();
-                                     ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
-                                   }
-                       );
+                         );
+    }
     ul.appendChild(li);
   }
   todoList.appendChild(ul);
