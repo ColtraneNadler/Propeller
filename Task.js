@@ -5,6 +5,8 @@ function Task(label)
   this.id =  Math.random().toString(36).substr(2, 5);
   this.label = label;
   this.tags = [];
+  
+  this.notes;
 
   this.active = true;
   this.complete = false;
@@ -85,4 +87,12 @@ Task.prototype.removeTag = function(tag)
 Task.prototype.isTag = function(tag)
 {
   return (this.tags.indexOf(tag) != -1);
+}
+Task.prototype.setNote = function(notes)
+{
+  this.notes = notes;
+}
+Task.prototype.getNote = function()
+{
+  return this.notes;
 }

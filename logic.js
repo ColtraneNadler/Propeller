@@ -172,6 +172,7 @@ function createTask(event)
   {
     var task = new Task(event.target.value);
     var tagList = document.getElementById("tagList").firstChild;
+    var taskNote = document.getElementById("taskNote").value;
     var tags = tagList.getElementsByTagName("li");
     if(tags.length == 0)
     {
@@ -187,6 +188,8 @@ function createTask(event)
         }
       }
       task.addTag("all");
+   //   console.log(taskNote);
+      task.setNote(taskNote);
       ls.addItem("TASKLIST",task,getTasksByTag,ls.data.USER.getActiveTag());
       
       event.target.value = null;
@@ -486,9 +489,13 @@ function showEditForm(event,task)
       tagList.appendChild(tag);
     }
   }
+  var editTaskNote = document.createElement("input");
+  editTaskNote.setAttribute('type','text');
+  editTaskNote.setAttribute('value',ls.data.TASKLIST[event.target.id.substr("edit".length)].getNote());
 //  editTaskForm.appendChild(targetTask);
   editTaskForm.appendChild(taskLabel);
   editTaskForm.appendChild(tagList);
+  editTaskForm.appendChild(editTaskNote);
 }
 
 function returnWorld(items)
@@ -517,6 +524,7 @@ function editTask(event,task)
 //      console.log(tags[i].firstChild);
     }
     ls.data.TASKLIST[task].setLabel(event.target.value);
+    ls.data.TASKLIST[task].setNote(event.target.parentNode.lastChild.value);
 //    console.log(event.target);
 //    console.log(tasklist);
     ls.setData();
