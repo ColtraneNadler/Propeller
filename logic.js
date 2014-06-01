@@ -177,6 +177,7 @@ function createTask(event)
     var task = new Task(event.target.value);
     var tagList = document.getElementById("tagList").firstChild;
     var taskNote = document.getElementById("taskNote").value;
+    var taskTimer = new Timer(document.getElementById("taskTime").value);
     var tags = tagList.getElementsByTagName("li");
     if(tags.length == 0)
     {
@@ -194,6 +195,7 @@ function createTask(event)
       task.addTag("all");
    //   console.log(taskNote);
       task.setNote(taskNote);
+      task.setTimer(taskTimer);
       ls.addItem("TASKLIST",task,getTasksByTag,ls.data.USER.getActiveTag());
       
       event.target.value = null;
