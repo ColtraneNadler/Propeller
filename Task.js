@@ -6,7 +6,7 @@ function Task(label)
   this.label = label;
   this.tags = [];
   
-  this.notes;
+  this.notes="";
 
   this.active = true;
   this.complete = false;

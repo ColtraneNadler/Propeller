@@ -1,3 +1,5 @@
+//(function(window)
+// {
 function Timer(time, face)
 {
   this.duration = time;
@@ -22,55 +24,59 @@ Timer.prototype.countDown = function()
   if(!this.isRunning)
   {
     this.isRunning = true;
-    this.timeLeft = (this.timeLeft == 0) ? this.duration * 60 * 1000: this.timeLeft;
+//    this.timeLeft = (this.timeLeft == 0) ? this.duration * 60 * 1000 : this.timeLeft;
     this.timerEnd = new Date().getTime() + this.timeLeft;
     var that = this;
-    this.timerID = window.setInterval(function(){that.tick();},this.refreshInterval);
+    this.timerID = window.setInterval(function(ls){that.tick(ls);},this.refreshInterval);
   }
 }
 
-Timer.prototype.tick = function()
+Timer.prototype.tick = function(ls)
 {
-  this.timeLeft = this.timerEnd - (new Date().getTime()) ;
+  this.timeLeft = this.timerEnd - (new Date().getTime());
   if(this.timeLeft > 0)
   {
     this.speak(this.prependZero(this.getHours(this.timeLeft))+":"+this.prependZero(this.getMinutes(this.timeLeft))+":"+this.prependZero(this.getSeconds(this.timeLeft))+"."+this.getMilliseconds(this.timeLeft));
+//    ls.setData();
   }
   else
   {
-    this.stop();
+    this.stop(ls);
   }
 }
 
-Timer.prototype.pause = function()
+Timer.prototype.pause = function(ls)
 {
   if(this.isRunning)
   {
     clearInterval(this.timerID);
     this.timerID = 0;
     this.isRunning = false;
+//    ls.setData();
   }
 }
 
-Timer.prototype.togglePause = function()
+Timer.prototype.togglePause = function(ls)
 {
   if(this.isRunning)
   {
-    this.pause();
+    this.pause(ls);
   }
   else  //this.isRunning = false;
   {
-    this.countDown();
+    this.countDown(ls);
   }
+  ls.setData();
 }
 
-Timer.prototype.stop = function()
+Timer.prototype.stop = function(ls)
 {
   clearInterval(this.timerID);
   this.timerID = 0;
   this.speak("00:00:00.0");
   this.timeLeft = 0;
   this.isRunning = false;
+  ls.setData();
 }
 
 Timer.prototype.getMilliseconds = function(milliseconds)
@@ -109,3 +115,10 @@ Timer.prototype.speak = function(message)
 {
   this.face.innerHTML = message;
 }
+
+Timer.prototype.tellTime = function()
+{
+  this.speak(this.prependZero(this.getHours(this.timeLeft))+":"+this.prependZero(this.getMinutes(this.timeLeft))+":"+this.prependZero(this.getSeconds(this.timeLeft))+"."+this.getMilliseconds(this.timeLeft));
+}
+//  window.Timer = Timer;
+//}(window));

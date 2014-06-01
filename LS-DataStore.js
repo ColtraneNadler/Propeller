@@ -120,6 +120,9 @@ LocalStore.prototype.getData = function(key,callback,args)
     else if(object == "TIMER")
     {
       var tempTimer = new Timer(value.duration);
+      for(var i in value) {
+        tempTimer[i] = value[i];
+      }
       value = tempTimer;
     }
     else if(object == "TASK")
@@ -127,7 +130,9 @@ LocalStore.prototype.getData = function(key,callback,args)
       var tempTask = new Task(value.label);
       for(var i in value)
       {
-//        if(i != "deleted")
+        if(i == "timer") {
+          value[i] = reconstitute("TIMER",value[i]);
+        }
         tempTask[i] = value[i];
       }
       value = tempTask;

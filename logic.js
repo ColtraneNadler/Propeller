@@ -115,7 +115,6 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
     activeItem.appendChild(taskCheck);
 
     var taskText = document.createTextNode(tasklist[activeTask].label);
-
     var editLink = document.createElement("a");
     editLink.id = "edit";
     editLink.addEventListener("click",function(event)
@@ -163,6 +162,10 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
   }
   activeItem.setAttribute('title',ls.data.TASKLIST[activeTask].notes);
   activeItem.style.display = "block";
+  console.log(ls.data.TASKLIST[activeTask].timer);
+  ls.data.TASKLIST[activeTask].timer.setFace(document.getElementById("clockFace"));
+  ls.data.TASKLIST[activeTask].timer.tellTime();
+  document.getElementById("clockFace").addEventListener("click",function(){ls.data.TASKLIST[activeTask].timer.togglePause(ls);});
 }
 
 //document.getElementById("activeTask").innerText = ls.data.TASKLIST[ls.data.USER.getActiveTask()].label;
@@ -415,6 +418,7 @@ function printTasks(items,ls)
                                      }
                          );
     }
+    li.setAttribute('title',items[i].getNote());
     ul.appendChild(li);
   }
   todoList.appendChild(ul);
