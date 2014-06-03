@@ -1,6 +1,6 @@
 function Task(label)
 {
-  this.timer = new Timer(0.25);
+  this.timer = new Timer(25);
 
   this.id =  Math.random().toString(36).substr(2, 5);
   this.label = label;

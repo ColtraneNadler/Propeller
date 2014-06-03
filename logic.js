@@ -154,15 +154,18 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
                                              ls.setData();
                                              document.getElementById(event.target.id).innerHTML = null;
                                              ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
+                                             document.getElementById("clockFace").innerHTML = null;
 //                                             console.log(event.target.id);
 //                                             ls.setData();
 //                                             ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
                                            }
                                );
   }
-  activeItem.setAttribute('title',ls.data.TASKLIST[activeTask].notes);
+  if(ls.data.TASKLIST[activeTask].notes != "undefined" && ls.data.TASKLIST[activeTask].notes != null) {
+    activeItem.setAttribute('title',ls.data.TASKLIST[activeTask].notes);
+  }
   activeItem.style.display = "block";
-  console.log(ls.data.TASKLIST[activeTask].timer);
+//  console.log(ls.data.TASKLIST[activeTask].timer);
   ls.data.TASKLIST[activeTask].timer.setFace(document.getElementById("clockFace"));
   ls.data.TASKLIST[activeTask].timer.tellTime();
   document.getElementById("clockFace").addEventListener("click",function(){ls.data.TASKLIST[activeTask].timer.togglePause(ls);});
@@ -452,6 +455,7 @@ function showTaskForm(event,task)
   {
 //    console.log(task);    
   }
+  document.getElementById("taskTime").value = 25;
   document.getElementById("addTask").style.display = "inline-block";
   document.getElementById("hideAddTask").style.display = "inline-block";
   document.getElementById("showAddTask").style.display = "none";
