@@ -102,6 +102,8 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
     taskCheck.id = "check";
     taskCheck.onchange = function(event)
                          {
+                           ls.data.TASKLIST[activeTask].timer.stop(ls);
+                           document.getElementById("clockFace").innerHTML = null;
                            document.getElementById(event.target.id).parentNode.style.textDecoration = "line-through";
                            document.getElementById(event.target.id).style.display = "none";
                            ls.data.TASKLIST[activeTask].setComplete(true);
@@ -150,11 +152,12 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
     activeItem.appendChild(removeLink);
     activeItem.addEventListener("dblclick",function(event)
                                            {
+//                                             ls.data.TASKLIST[activeTask].timer.pause(ls);
+                                             document.getElementById("clockFace").innerHTML = null;
                                              ls.data.USER.setActiveTask(null);
                                              ls.setData();
                                              document.getElementById(event.target.id).innerHTML = null;
                                              ls.getData('TASKLIST',getTasksByTag,ls.data.USER.getActiveTag());
-                                             document.getElementById("clockFace").innerHTML = null;
 //                                             console.log(event.target.id);
 //                                             ls.setData();
 //                                             ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
