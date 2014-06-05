@@ -507,9 +507,23 @@ function showEditForm(event,task)
   editTaskNote.setAttribute('type','text');
   editTaskNote.setAttribute('value',ls.data.TASKLIST[event.target.id.substr("edit".length)].getNote());
 //  editTaskForm.appendChild(targetTask);
+  var cancel = document.createElement("div");
+  cancel.appendChild(document.createTextNode("CANCEL"));
+  cancel.addEventListener("click",function(event){hideEditForm();});
+  editTaskForm.appendChild(cancel);
   editTaskForm.appendChild(taskLabel);
   editTaskForm.appendChild(tagList);
   editTaskForm.appendChild(editTaskNote);
+  editTaskForm.style.display="block";
+}
+
+function hideEditForm()
+{
+  var editTaskForm = document.getElementById("editTask");
+  while(editTaskForm.firstChild) {
+    editTaskForm.removeChild(editTaskForm.firstChild);
+  }
+  editTaskForm.style.display="none";
 }
 
 function returnWorld(items)
