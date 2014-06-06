@@ -205,6 +205,7 @@ function createTask(event)
       ls.addItem("TASKLIST",task,getTasksByTag,ls.data.USER.getActiveTag());
       
       event.target.value = null;
+      document.getElementById("taskNote").value = null;
     }
   }
 }
