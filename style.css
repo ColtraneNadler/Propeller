@@ -33,12 +33,14 @@ header
 }
 section
 {
+/**
   background-color: red;
+**/
   display: inline-block;
   width: 100%;
-/**
-  min-height: 10em;
-**/
+
+  min-height: 250px;
+
 }
 
 #tagList ul li
