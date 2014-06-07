@@ -1,7 +1,7 @@
 var ls = new LocalStore();
 
 window.onload = function()
-{  
+{
   var addTask = document.getElementById("addTask");
   var showAddTask = document.getElementById("showAddTask");
   var hideAddTask = document.getElementById("hideAddTask");
@@ -11,7 +11,7 @@ window.onload = function()
   var tagsMenu = document.getElementById("tagsMenu");
   var dumpSpace = document.getElementById("dump");
   var clickToImport = document.getElementById("importMenu");
-  
+
   addTask.style.display = "none";
   hideAddTask.style.display = "none";
   hideMenu.style.display = "none";
@@ -31,7 +31,6 @@ window.onload = function()
                                            }
                                          }
                                 );
-  
   showAddTask.addEventListener("click",function(event)
                                        {
                                          ls.getData('TAGS',printTags);
@@ -96,7 +95,6 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
   }
   if(activeTask && activeTask != null) {
 //  activeItem.innerText = tasklist[activeTask].label;
-
     var taskCheck = document.createElement("input");
     taskCheck.setAttribute('type','checkbox');
     taskCheck.id = "check";
@@ -162,6 +160,11 @@ function getActiveTaskFromTasklist(tasklist,ls,activeTask)
 //                                             ls.setData();
 //                                             ls.getData('TASKLIST',getActiveTaskFromTasklist,ls.data.USER.getActiveTask());
                                            }
+                               );
+    activeItem.addEventListener("click",function(event)
+                                        {
+                                          ls.data.TASKLIST[activeTask].timer.togglePause(ls);
+                                        }
                                );
   }
   if(ls.data.TASKLIST[activeTask].notes != "undefined" && ls.data.TASKLIST[activeTask].notes != null) {
