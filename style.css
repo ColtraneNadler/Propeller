@@ -33,18 +33,12 @@ header
 }
 section
 {
-/**
-  background-color: red;
-**/
   display: inline-block;
   width: 100%;
-
   min-height: 250px;
 
 }
 
-#tagList ul li
-{
-  background-color: orange;
+nav ul li {
   display: inline-block;
 }

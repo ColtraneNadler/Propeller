@@ -1,5 +1,5 @@
 var ls = new LocalStore();
-
+/**
 window.onload = function()
 {
   var addTask = document.getElementById("addTask");
@@ -85,7 +85,7 @@ window.onload = function()
     }
   }
 }
-
+*/
 function getActiveTaskFromTasklist(tasklist,ls,activeTask)
 {
 //  console.log(activeTask);
@@ -273,13 +273,13 @@ function printTags(items,ls)
     
     ul.appendChild(li);
   }
-  var createTag = document.createElement("input");
-  createTag.setAttribute('type','text');
-  createTag.id = "tagLabel";
-  createTag.onkeydown = addTag;
+//  var createTag = document.createElement("input");
+//  createTag.setAttribute('type','text');
+//  createTag.id = "tagLabel";
+//  createTag.onkeydown = addTag;
   ul.appendChild(li);
   tagList.appendChild(ul);
-  tagList.appendChild(createTag);
+//  tagList.appendChild(createTag);
 }
 function removeTagsFromTasks(items,ls,tag)
 {
