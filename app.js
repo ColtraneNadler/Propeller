@@ -1,63 +1,42 @@
 window.onload = function() {
-  //register different blocks
-  var doTask = document.getElementById("doTask");
-  var viewTaskList = document.getElementById("viewTaskList");
-  var createTask = document.getElementById("createTask");
-  var createTag = document.getElementById("createTag");
-  var editTask = document.getElementById("editTask");
-  var dumpData = document.getElementById("dumpData");
-  var tagsMenu = document.getElementById("tagsMenu");
+//register a new app to the window
+  propeller = new App()
 
-  var showCreateTask = document.getElementById("showCreateTask");
-  var showMenu = document.getElementById("showMenu");
-  var showImport = document.getElementById("showImport");
-  
-  //set the default block views
-  doTask.style.display = "none";
-  viewTaskList.style.display = "none";
-  createTask.style.display = "none";
-  createTag.style.display = "none";
-  editTask.style.display = "none";
-  dumpData.style.display = "none";
-  tagsMenu.style.display = "none";
+//registering app elements might require a function later
+  propeller.head = document.getElementsByTagName("header")[0]
+  propeller.menu = document.getElementsByTagName("nav")[0]
+  propeller.body = document.getElementsByTagName("section")[0]
+  propeller.foot = document.getElementsByTagName("footer")[0]
 
-  var propeller = new App();
-  propeller.registerView(createTask);
-  propeller.registerView(tagsMenu);
-  propeller.registerView(dumpData);
-  
-  //assign default event listeners
-  showCreateTask.addEventListener("click",function(event) { propeller.toggleView(createTask); });
-  showMenu.addEventListener("click",function(event) { propeller.toggleView(tagsMenu); });
-  showImport.addEventListener("click",function(event) { propeller.toggleView(dumpData); });
-}
+//create the views and set their content
+  basicView = new View()
+  basicView.head = "<h1>Propeller</h1>"
+  basicView.body = "<input type=\"text\" value=\"walk the dog\" />" +
+                   "<section id=\"to_do_list\"></sction"
 
-//this function will not prevent multiple things from being visible
-function toggleElementView(element) {
-  if(element.style.display == "none")
-    element.style.display = "inline-block";
-  else
-    element.style.display = "none";
+  propeller.views.push(basicView);
+  propeller.show(basicView);
 }
 
 function App() {
-  this.views = []
+  this.head = ""
+  this.menu = ""
+  this.body = ""
+  this.foot = ""
+
+  this.views = [];
 }
 
-App.prototype.registerView = function(view) {
-  this.views.push(view);
+App.prototype.show = function(view) {
+  this.head.innerHTML = view.head
+  this.menu.innerHTML = view.menu
+  this.body.innerHTML = view.body
+  this.foot.innerHTML = view.foot
 }
 
-App.prototype.toggleView = function(view) {
-  console.log(view);
-  console.log(this.views.length);
-  var match = false;
-  for(var i = 0; i < this.views.length && !match; i++) {
-    if(this.views[i] == view) {
-      this.views[i].style.display = "inline-block";
-    } else {
-      this.views[i].style.display = "none";
-    }
-    console.log(match);
-  }
+function View() {
+  this.head = ""
+  this.menu = ""
+  this.body = ""
+  this.foot = ""
 }
