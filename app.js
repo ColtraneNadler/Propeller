@@ -1,3 +1,8 @@
+function Message(header,content) {
+  this.header = header
+  this.content = content
+}
+
 function Store(point) {
   this.store = window.localStorage || ""
   this.point = point || "appData"
@@ -27,8 +32,14 @@ View.prototype.registerTransmitter = function(transmitter) {
 }
 
 View.prototype.send = function() {
-  if(this.transmit) {
+  if(this.transmit && this.message) {
     return this.transmit()
+  }
+}
+
+View.prototype.endTransmission = function() {
+  if(this.message) {
+    delete this.message
   }
 }
 
@@ -51,6 +62,7 @@ function App(dataPoint) {
   this.foot = ""
 
   this.views = []
+  this.events = []
 }
 
 App.prototype.getViewFromLabel = function(label) {
@@ -64,8 +76,8 @@ App.prototype.getViewFromLabel = function(label) {
 
 //more to come here
 App.prototype.setActiveView = function(view) {
-  view.get(this.store.data)
-
+  this.activeView = view
+  view.get(new Message("todo_list",this.store.data))
   this.show(view)
 }
 
@@ -75,16 +87,43 @@ App.prototype.show = function(view) {
   this.body.innerHTML = view.body
   this.foot.innerHTML = view.foot
 
+  this.events = view.events
   for(var i = 0; i < view.events.length; i++) {
-    document.getElementById(view.events[i].element).addEventListener(view.events[i].trigger,view.events[i].action)
+    document.getElementById(view.events[i].element).addEventListener(view.events[i].trigger,this.signal.bind(this))
   }
+}
+
+App.prototype.signal = function(event) {
+  for(var i = 0; i < this.events.length; i++) {
+    if(this.events[i].trigger == event.type && this.events[i].element == event.target.id) {
+      this.events[i].action(event)
+
+//shouldn't require a view to be active to send a message
+      var message = this.activeView.send()
+      if(message) {
+        this.receive(message)
+        for(var j = 0; j < this.views.length; j++) {
+          this.views[j].get(message)
+        }
+
+        this.confirmReceipt(this.activeView)
+        this.show(this.activeView)
+      }
+    }
+  }
+}
+
+App.prototype.confirmReceipt = function(view) {
+  view.endTransmission()
 }
 
 //this function needs some work
 App.prototype.receive = function(message) {
-  this.store.data.push(message)
+  if(!this.store.data[message.header]) {
+    this.store.data[message.header] = []
+  }
+  this.store.data[message.header].push(message.content)
   this.store.store[this.store.point] = JSON.stringify(this.store.data)
-  this.show(this.getViewFromLabel("basicView"))
 }
 
 
@@ -109,12 +148,12 @@ window.onload = function() {
                    "<ul id=\"to_do_list\"></ul>"
 
   basicView.registerReceiver(function(message) {
-                               if(Array.isArray(message)) {
-                                 for(var i = 0; i < message.length; i++) {
-                                   addListItem(this,message[i])
+                               if(Array.isArray(message.content)) {
+                                 for(var i = 0; i < message.content.length; i++) {
+                                   addListItem(this,message.content[i])
                                  }
                                } else {
-                                 addListItem(this,message)
+                                 addListItem(this,message.content)
                                }
                                function addListItem(view,item) {
                                  var li = document.createElement("li")
@@ -130,22 +169,24 @@ window.onload = function() {
                                }
                              })
 
+  basicView.registerTransmitter(function() { return this.message })
+
 //register any events
   basicView.events.push(new Event("input","keydown",function(event) {
                                             if(event.keyCode == 13 && event.target.value != "") {
-                                              //this part needs to change
-                                              basicView.get(event.target.value)
-                                              propeller.receive(event.target.value)
+                                              this.message = new Message("todo",event.target.value)
                                               event.target.value = ""
                                             }
-                                          }))
+                                          }.bind(basicView)))
   basicView.events.push(new Event("input","focus",function(event) {
-                                                   if(event.target.value == "walk the dog")
+                                                   if(event.target.value == "walk the dog") {
                                                      event.target.value = ""
+                                                   }
                                                  }))
   basicView.events.push(new Event("input","blur",function(event) {
-                                                   if(event.target.value == "")
+                                                   if(event.target.value == "") {
                                                      event.target.value = null
+                                                   }
                                                  }))
 
 //register views and set a view to display
