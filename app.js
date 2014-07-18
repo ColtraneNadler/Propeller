@@ -1,5 +1,13 @@
-function Message(header,content) {
-  this.header = header
+function Task() {
+  this.id = Math.random().toString(36).substr(2, 5);
+  this.task = ""
+  this.active = ""
+  this.complete = ""
+}
+
+function Message(target,action,content) {
+  this.target = target
+  this.action = action
   this.content = content
 }
 
@@ -77,7 +85,7 @@ App.prototype.getViewFromLabel = function(label) {
 //more to come here
 App.prototype.setActiveView = function(view) {
   this.activeView = view
-  view.get(new Message("tasklist",this.store.data))
+  view.get(new Message("tasklist","create",this.store.data))
   this.show(view)
 }
 
@@ -104,16 +112,17 @@ App.prototype.signal = function(event) {
       this.events[i].action(event)
 
 //shouldn't require a view to be active to send a message
-
       var message = this.activeView.send()
       if(message) {
+        var action = message.action
         this.receive(message)
         for(var j = 0; j < this.views.length; j++) {
           this.views[j].get(message)
         }
-
         this.confirmReceipt(this.activeView)
-        this.show(this.activeView)
+        if(action == "create" || action == "delete") {
+          this.show(this.activeView)
+        }
       }
     }
   }
@@ -125,11 +134,16 @@ App.prototype.confirmReceipt = function(view) {
 
 //this function needs some work
 App.prototype.receive = function(message) {
-  if(!this.store.data[message.header]) {
-    this.store.data[message.header] = []
+  console.log(message)
+  if(message.action == "create") {
+    if(!this.store.data[message.target]) {
+      this.store.data[message.target] = []
+    }
+    this.store.data[message.target].push(message.content)
+    this.store.store[this.store.point] = JSON.stringify(this.store.data)
+  } else if(message.action == "update" || message.action == "delete") {
+    this.store.store[this.store.point] = JSON.stringify(this.store.data)
   }
-  this.store.data[message.header].push(message.content)
-  this.store.store[this.store.point] = JSON.stringify(this.store.data)
 }
 
 
@@ -154,27 +168,58 @@ window.onload = function() {
                    "<ul id=\"task_list\"></ul>"
 
   basicView.registerReceiver(function(message) {
-                               if(message.header == "tasklist" && message.content) {
-                                 message.content = message.content.task
-                               }
-                               if(Array.isArray(message.content)) {
-                                 for(var i = 0; i < message.content.length; i++) {
-                                   addListItem(this,message.content[i])
+                               if(message.action == "create") {
+                                 if(message.target == "tasklist" && message.content) {
+                                   message.content = message.content.task
                                  }
-                               } else if(message.content) {
-                                 addListItem(this,message.content)
+                                 if(Array.isArray(message.content)) {
+                                   for(var i = 0; i < message.content.length; i++) {
+                                     addListItem(this,message.content[i])
+                                   }
+                                 } else if(message.content) {
+                                   addListItem(this,message.content)
+                                 }
+                                 function addListItem(view,item) {
+                                   if(item.active) {
+                                     var li = document.createElement("li")
+                                     li.id = item.id
+                                     var cb = document.createElement("input")
+                                     cb.setAttribute("type","checkbox")
+                                     if(item.complete) {
+                                      cb.setAttribute("checked","checked")
+                                     }
+                                     cb.id = "co_" + item.id
+                                     view.events.push(new Event("co_" + item.id,"change",function(event) {
+                                                                                          item.complete = event.target.checked
+                                                                                           view.message = new Message("task","update",item)
+                                                                                         }))
+                                     li.appendChild(cb)
+                                     li.appendChild(document.createTextNode(item.task))
+                                     var cx = document.createElement("a")
+                                     cx.id="cx_" + item.id
+                                     cx.appendChild(document.createTextNode("[ x ]"))
+                                     view.events.push(new Event("cx_" + item.id,"click",function(event) {
+                                                                                         item.active = false
+                                                                                         view.message = new Message("task","delete",item)
+                                                                                       }))
+                                     li.appendChild(cx)
+                                     var temp = document.createElement("div")
+                                     temp.innerHTML = view.body
+                                     temp.childNodes[1].appendChild(li)
+                                     view.body = temp.innerHTML
+                                   }
+                                 }
                                }
-                               function addListItem(view,item) {
-                                 var li = document.createElement("li")
-                                 var cb = document.createElement("input")
-                                 cb.setAttribute("type","checkbox")
-                                 li.appendChild(cb)
-                                 li.appendChild(document.createTextNode(item))
-
+                               if(message.action == "delete") {
                                  var temp = document.createElement("div")
-                                 temp.innerHTML = view.body
-                                 temp.childNodes[1].appendChild(li)
-                                 view.body = temp.innerHTML
+                                 temp.innerHTML = this.body
+                                 for(var i = 0; i < temp.childNodes[1].children.length; i++) {
+                                   if(temp.childNodes[1].childNodes[i].id == message.content.id) {
+//                                     temp.childNodes[1].removeChild(temp.childNodes[1].childNodes[i])
+                                     temp.childNodes[1].childNodes[i].style.display = "none"
+                                   }
+                                 }
+                                 this.body = temp.innerHTML
                                }
                              })
 
@@ -183,7 +228,12 @@ window.onload = function() {
 //register any events
   basicView.events.push(new Event("input","keydown",function(event) {
                                             if(event.keyCode == 13 && event.target.value != "") {
-                                              this.message = new Message("task",event.target.value)
+                                              var task = new Task()
+                                              task.task = event.target.value
+                                              task.complete = false
+                                              task.active = true
+
+                                              this.message = new Message("task","create",task)
                                               event.target.value = ""
                                             }
                                           }.bind(basicView)))
