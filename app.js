@@ -7,7 +7,7 @@ function Store(point) {
   this.store = window.localStorage || ""
   this.point = point || "appData"
 
-  this.data = (this.store[point] ? JSON.parse(this.store[point]) : [])
+  this.data = (this.store[point] ? JSON.parse(this.store[point]) : {})
 }
 
 function Event(element,trigger,action) {
@@ -77,7 +77,7 @@ App.prototype.getViewFromLabel = function(label) {
 //more to come here
 App.prototype.setActiveView = function(view) {
   this.activeView = view
-  view.get(new Message("todo_list",this.store.data))
+  view.get(new Message("tasklist",this.store.data))
   this.show(view)
 }
 
@@ -91,6 +91,11 @@ App.prototype.show = function(view) {
   for(var i = 0; i < view.events.length; i++) {
     document.getElementById(view.events[i].element).addEventListener(view.events[i].trigger,this.signal.bind(this))
   }
+  for(var i = 0; i < this.body.children.length; i++) {
+    if(this.body.children[i].autofocus) {
+      this.body.children[i].focus()
+    }
+  }
 }
 
 App.prototype.signal = function(event) {
@@ -99,6 +104,7 @@ App.prototype.signal = function(event) {
       this.events[i].action(event)
 
 //shouldn't require a view to be active to send a message
+
       var message = this.activeView.send()
       if(message) {
         this.receive(message)
@@ -144,15 +150,18 @@ window.onload = function() {
   basicView = new View()
   basicView.label = "basicView"
   basicView.head = "<h1>Propeller</h1>"
-  basicView.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" />" +
-                   "<ul id=\"to_do_list\"></ul>"
+  basicView.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" autofocus=\"autofocus\"/>" +
+                   "<ul id=\"task_list\"></ul>"
 
   basicView.registerReceiver(function(message) {
+                               if(message.header == "tasklist" && message.content) {
+                                 message.content = message.content.task
+                               }
                                if(Array.isArray(message.content)) {
                                  for(var i = 0; i < message.content.length; i++) {
                                    addListItem(this,message.content[i])
                                  }
-                               } else {
+                               } else if(message.content) {
                                  addListItem(this,message.content)
                                }
                                function addListItem(view,item) {
@@ -174,7 +183,7 @@ window.onload = function() {
 //register any events
   basicView.events.push(new Event("input","keydown",function(event) {
                                             if(event.keyCode == 13 && event.target.value != "") {
-                                              this.message = new Message("todo",event.target.value)
+                                              this.message = new Message("task",event.target.value)
                                               event.target.value = ""
                                             }
                                           }.bind(basicView)))
