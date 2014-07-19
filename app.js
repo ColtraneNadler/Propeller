@@ -190,7 +190,16 @@ window.onload = function() {
                                      }
                                      cb.id = "co_" + item.id
                                      view.events.push(new Event("co_" + item.id,"change",function(event) {
-                                                                                          item.complete = event.target.checked
+                                                                                           item.complete = event.target.checked
+                                                                                           var temp = document.createElement("div")
+                                                                                           temp.innerHTML = view.body
+                                                                                           for(var i = 0; i < temp.childNodes[1].children.length; i++) {
+                                                                                             if(temp.childNodes[1].childNodes[i].id == item.id) {
+                                                                                               temp.childNodes[1].childNodes[i].childNodes[0].setAttribute("checked","checked")
+                                                                                               
+                                                                                             }
+                                                                                           }
+                                                                                           view.body = temp.innerHTML
                                                                                            view.message = new Message("task","update",item)
                                                                                          }))
                                      li.appendChild(cb)
