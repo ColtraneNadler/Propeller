@@ -34,16 +34,15 @@ basicView.registerReceiver(
               var temp = document.createElement("div")
               temp.innerHTML = view.body
               for(var i = 0; i < temp.childNodes[1].children.length; i++) {
-                if(temp.childNodes[1].childNodes[i].id == item.id) {
-                  temp.childNodes[1].childNodes[i].childNodes[0].setAttribute("checked","checked")
+                var li = temp.childNodes[1].childNodes[i]
+                if(element.id == item.id) {
+                  li.childNodes[0].setAttribute("checked","checked")
                 }
               }
               view.body = temp.innerHTML
               view.message = new Message("task","update",item)
             }
           ))
-          li.appendChild(cb)
-          li.appendChild(document.createTextNode(item.task))
           var cx = document.createElement("a")
           cx.id="cx_" + item.id
           cx.appendChild(document.createTextNode("[ x ]"))
@@ -53,7 +52,9 @@ basicView.registerReceiver(
               view.message = new Message("task","delete",item)
             }
           ))
+          li.appendChild(document.createTextNode(item.task))
           li.appendChild(cx)
+          li.appendChild(cb)
           var temp = document.createElement("div")
           temp.innerHTML = view.body
           temp.childNodes[1].appendChild(li)
