@@ -51,8 +51,6 @@ input[type=text] {
 }
 
 input[type=checkbox] {
-  position: relative;
-  float: right;
 }
 
 ul {
@@ -60,6 +58,7 @@ ul {
 }
 
 li {
+  clear: both;
   text-align: left;
   font-size: 1.5em;
   margin: auto;
@@ -77,7 +76,17 @@ li:hover {
 }
 
 a {
+  cursor: pointer;
+}
+span {
+  display: inline-block;
+}
+
+.task {
+  width: 90%;
+}
+
+.ctrl {
   position: relative;
   float: right;
-  cursor: pointer;
 }
