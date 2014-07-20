@@ -24,8 +24,8 @@ basicView.registerReceiver(
               temp.innerHTML = view.body
               for(var i = 0; i < temp.childNodes[1].children.length; i++) {
                 var li = temp.childNodes[1].childNodes[i]
-                if(element.id == item.id) {
-                  li.childNodes[0].setAttribute("checked","checked")
+                if(li.id == item.id) {
+                  li.childNodes[2].setAttribute("checked","checked")
                 }
               }
               view.body = temp.innerHTML
