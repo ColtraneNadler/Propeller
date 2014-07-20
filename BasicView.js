@@ -25,7 +25,7 @@ basicView.registerReceiver(
               for(var i = 0; i < temp.childNodes[1].children.length; i++) {
                 var li = temp.childNodes[1].childNodes[i]
                 if(li.id == item.id) {
-                  li.childNodes[2].setAttribute("checked","checked")
+                  li.querySelector("#co_" + item.id).setAttribute("checked","checked")
                 }
               }
               view.body = temp.innerHTML
@@ -42,8 +42,10 @@ basicView.registerReceiver(
             }
           ))
           li.appendChild(document.createTextNode(item.task))
-          li.appendChild(cx)
-          li.appendChild(cb)
+          var span = document.createElement("span")
+          span.appendChild(cb)
+          span.appendChild(cx)
+          li.appendChild(span)
           var temp = document.createElement("div")
           temp.innerHTML = view.body
           temp.childNodes[1].appendChild(li)
