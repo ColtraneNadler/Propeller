@@ -41,8 +41,12 @@ basicView.registerReceiver(
               view.message = new Message("task","delete",item)
             }
           ))
-          li.appendChild(document.createTextNode(item.task))
           var span = document.createElement("span")
+          span.className = "task"
+          span.appendChild(document.createTextNode(item.task))
+          li.appendChild(span)
+          span = document.createElement("span")
+          span.className = "ctrl"
           span.appendChild(cb)
           span.appendChild(cx)
           li.appendChild(span)
