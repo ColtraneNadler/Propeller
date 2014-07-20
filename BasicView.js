@@ -7,18 +7,7 @@ basicView.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" autof
 basicView.registerReceiver(
   function(message) {
     if(message.action == "create") {
-      if(message.target == "tasklist" && message.content) {
-        message.content = message.content.task
-      }
-      if(Array.isArray(message.content)) {
-        for(var i = 0; i < message.content.length; i++) {
-          addListItem(this,message.content[i])
-        }
-      } else if(message.content) {
-        addListItem(this,message.content)
-      }
-
-      function addListItem(view,item) {
+     function addListItem(view,item) {
         if(item.active) {
           var li = document.createElement("li")
           li.id = item.id
@@ -60,6 +49,17 @@ basicView.registerReceiver(
           temp.childNodes[1].appendChild(li)
           view.body = temp.innerHTML
         }
+      }
+
+      if(message.target == "tasklist" && message.content) {
+        message.content = message.content.task
+      }
+      if(Array.isArray(message.content)) {
+        for(var i = 0; i < message.content.length; i++) {
+          addListItem(this,message.content[i])
+        }
+      } else if(message.content) {
+        addListItem(this,message.content)
       }
     } else if(message.action == "delete") {
       var temp = document.createElement("div")
