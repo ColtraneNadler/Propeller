@@ -1,0 +1,92 @@
+html, body, header, nav, section, footer, h1, input, ul, li, a {
+  margin: 0px;
+  padding: 0px;
+}
+
+html, body {
+  font-weight: normal;
+  font-style: normal;
+  text-align: center;
+}
+
+html {
+  background-color: #5D96DF;
+}
+
+body {
+  background-color: rgba(0,0,0,0.5);
+  color: white;
+  border-radius: 1em;
+  max-width: 50em;
+  min-height: 25em;
+  margin: auto;
+  margin-top: 2em;
+  padding: 1em;
+}
+
+header {
+  padding-bottom: 0.5em;
+}
+
+nav {
+}
+
+section {
+}
+
+footer {
+}
+
+h1 {
+}
+
+input[type=text] {
+  width: 80%;
+  color: black;
+  line-height: 1em;
+  border-radius: 0.5em;
+  padding: 0.25em;
+  padding-left: 0.5em;
+  font-size: 1.5em;
+}
+
+input[type=checkbox] {
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  clear: both;
+  text-align: left;
+  font-size: 1.5em;
+  margin: auto;
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+  width: 80%;
+  padding: 0.15em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
+  border-radius: 0.5em;
+}
+
+li:hover {
+  background-color: rgba(0,0,0,0.5);
+}
+
+a {
+  cursor: pointer;
+}
+span {
+  display: inline-block;
+}
+
+.task {
+  width: 90%;
+}
+
+.ctrl {
+  position: relative;
+  float: right;
+}
