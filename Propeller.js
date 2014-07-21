@@ -7,5 +7,6 @@ window.onload = function() {
   propeller.foot = document.getElementsByTagName("footer")[0]
 
   propeller.views.push(basicView)
+  propeller.views.push(statsView)
   propeller.setActiveView(basicView)
 }
