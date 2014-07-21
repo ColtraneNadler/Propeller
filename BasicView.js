@@ -20,6 +20,7 @@ basicView.registerReceiver(
           view.events.push(new Event("co_" + item.id,"change",
             function(event) {
               item.complete = event.target.checked
+              item.completeTime = (event.target.checked ? new Date().getTime() : null)
               var temp = document.createElement("div")
               temp.innerHTML = view.body
               for(var i = 0; i < temp.childNodes[1].children.length; i++) {
@@ -43,7 +44,7 @@ basicView.registerReceiver(
           ))
           var span = document.createElement("span")
           span.className = "task"
-          span.appendChild(document.createTextNode(item.task))
+          span.appendChild(document.createTextNode(item.label))
           li.appendChild(span)
           span = document.createElement("span")
           span.className = "ctrl"
@@ -87,7 +88,7 @@ basicView.events.push(new Event("input","keydown",
   function(event) {
     if(event.keyCode == 13 && event.target.value != "") {
       var task = new Task()
-      task.task = event.target.value
+      task.label = event.target.value
       task.complete = false
       task.active = true
 
