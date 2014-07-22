@@ -16,6 +16,16 @@ function View() {
   this.events = []
 }
 
+View.prototype.clear = function(target) {
+  var temp = document.createElement("div")
+  temp.innerHTML = this.body
+  var container = temp.querySelector(target)
+  while(container.firstChild) {
+    container.removeChild(container.firstChild)
+  }
+  this.body = temp.innerHTML
+}
+
 View.prototype.registerTransmitter = function(transmitter) {
   this.transmit = transmitter
 }

@@ -23,6 +23,7 @@ statsView.registerReceiver(
       }
 
       if(message.target == "tasklist" && message.content) {
+        this.clear("#task_stats")
         message.content = message.content.task
       }
 

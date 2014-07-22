@@ -1,5 +1,5 @@
 basicView = new View()
-basicView.label = "basicView"
+basicView.label = "Basic View"
 basicView.head = "<h1>Propeller</h1>"
 basicView.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" autofocus=\"autofocus\"/>" +
                  "<ul id=\"task_list\"></ul>"
@@ -59,6 +59,7 @@ basicView.registerReceiver(
       }
 
       if(message.target == "tasklist" && message.content) {
+        this.clear("#task_list")
         message.content = message.content.task
       }
       if(Array.isArray(message.content)) {
