@@ -5,6 +5,7 @@ function Event(element,trigger,action) {
 }
 
 function View() {
+  this.id = Math.random().toString(36).substr(2, 5)
   this.label = ""
 
   this.head = ""

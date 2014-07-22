@@ -17,6 +17,33 @@ function App(dataPoint) {
   this.events = []
 }
 
+App.prototype.registerView = function(view,listed) {
+  this.views.push(view)
+  if(listed) {
+    this.populateMenu(view)
+  }
+}
+
+App.prototype.populateMenu = function(view) {
+  var app = this
+  var li = document.createElement("li")
+  li.id = view.id
+//breaks event flow!
+  li.addEventListener("click",
+    function(event) {
+      app.setActiveView(app.getViewFromLabel(event.target.innerText))
+    }
+  )
+  li.appendChild(document.createTextNode(view.label))
+  if(!this.menu.querySelector("ul")) {
+    ul = document.createElement("ul")
+    ul.appendChild(li)
+    this.menu.appendChild(ul)
+  } else {
+    this.menu.querySelector("ul").appendChild(li)
+  }
+}
+
 App.prototype.getViewFromLabel = function(label) {
   for(var i = 0; i < this.views.length; i++ ) {
     if(this.views[i].label == label) {
@@ -35,7 +62,9 @@ App.prototype.setActiveView = function(view) {
 
 App.prototype.show = function(view) {
   this.head.innerHTML = view.head
+/**
   this.menu.innerHTML = view.menu
+**/
   this.body.innerHTML = view.body
   this.foot.innerHTML = view.foot
 
