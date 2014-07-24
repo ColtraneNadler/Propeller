@@ -41,8 +41,8 @@ taskStats.registerReceiver(
         var active = 0
         var inactive = 0
         var averageTime = 0
-        var total = list.length
-        for(var i = 0; i < list.length; i++) {
+        var total = (list ? list.length : 0)
+        for(var i = 0; i < total; i++) {
           addTaskStatsItem(view,list[i])
           if(list[i].active && list[i].complete) {
             complete += 1
@@ -55,7 +55,7 @@ taskStats.registerReceiver(
             inactive += 1
           }
         }
-        averageTime = averageTime / (total)
+        averageTime = (total > 0  ? averageTime / total : 0)
 
         var temp = document.createElement("div")
         temp.innerHTML = view.body
