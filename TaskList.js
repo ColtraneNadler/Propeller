@@ -1,10 +1,9 @@
-basicView = new View()
-basicView.label = "BasicView"
-basicView.head = "<h1>Propeller</h1>"
-basicView.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" autofocus=\"autofocus\"/>" +
-                 "<ul id=\"task_list\"></ul>"
+taskList = new View()
+taskList.label = "Tasks"
+taskList.head = "<h1>Propeller</h1>"
+taskList.body = "<ul id=\"task_list\"></ul>"
 
-basicView.registerReceiver(
+taskList.registerReceiver(
   function(message) {
     if(message.action == "create") {
      function addListItem(view,item) {
@@ -24,7 +23,7 @@ basicView.registerReceiver(
               var temp = document.createElement("div")
               temp.innerHTML = view.body
               for(var i = 0; i < temp.childNodes[1].children.length; i++) {
-                var li = temp.childNodes[1].childNodes[i]
+                var li = temp.childNodes[0].childNodes[i]
                 if(li.id == item.id) {
                   li.querySelector("#co_" + item.id).setAttribute("checked","checked")
                 }
@@ -53,7 +52,7 @@ basicView.registerReceiver(
           li.appendChild(span)
           var temp = document.createElement("div")
           temp.innerHTML = view.body
-          temp.childNodes[1].appendChild(li)
+          temp.childNodes[0].appendChild(li)
           view.body = temp.innerHTML
         }
       }
@@ -72,10 +71,10 @@ basicView.registerReceiver(
     } else if(message.action == "delete") {
       var temp = document.createElement("div")
       temp.innerHTML = this.body
-      for(var i = 0; i < temp.childNodes[1].children.length; i++) {
-        if(temp.childNodes[1].childNodes[i].id == message.content.id) {
-//          temp.childNodes[1].removeChild(temp.childNodes[1].childNodes[i])
-          temp.childNodes[1].childNodes[i].style.display = "none"
+      for(var i = 0; i < temp.childNodes[0].children.length; i++) {
+        if(temp.childNodes[0].childNodes[i].id == message.content.id) {
+//          temp.childNodes[0].removeChild(temp.childNodes[1].childNodes[i])
+          temp.childNodes[0].childNodes[i].style.display = "none"
         }
       }
       this.body = temp.innerHTML
@@ -83,34 +82,4 @@ basicView.registerReceiver(
   }
 )
 
-basicView.registerTransmitter(function() { return this.message })
-
-basicView.events.push(new Event("input","keydown",
-  function(event) {
-    if(event.keyCode == 13 && event.target.value != "") {
-      var task = new Task()
-      task.label = event.target.value
-      task.complete = false
-      task.active = true
-
-      this.message = new Message("task","create",task)
-      event.target.value = ""
-    }
-  }.bind(basicView)
-))
-
-basicView.events.push(new Event("input","focus",
-  function(event) {
-    if(event.target.value == "walk the dog") {
-      event.target.value = ""
-    }
-  }
-))
-
-basicView.events.push(new Event("input","blur",
-  function(event) {
-    if(event.target.value == "") {
-      event.target.value = null
-    }
-  }
-))
+taskList.registerTransmitter(function() { return this.message })

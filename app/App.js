@@ -70,7 +70,10 @@ App.prototype.show = function(view) {
 
   this.events = view.events
   for(var i = 0; i < view.events.length; i++) {
-    document.getElementById(view.events[i].element).addEventListener(view.events[i].trigger,this.signal.bind(this))
+//A better solution is to have the view drop the event and delete the element
+    if(document.getElementById(view.events[i].element)) {
+      document.getElementById(view.events[i].element).addEventListener(view.events[i].trigger,this.signal.bind(this))
+    }
   }
   for(var i = 0; i < this.body.children.length; i++) {
     if(this.body.children[i].autofocus) {
