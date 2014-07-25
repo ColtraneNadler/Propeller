@@ -5,78 +5,99 @@ taskList.body = "<ul id=\"task_list\"></ul>"
 
 taskList.registerReceiver(
   function(message) {
-    if(message.action == "create") {
-     function addListItem(view,item) {
-        if(item.active) {
-          var li = document.createElement("li")
-          li.id = item.id
-          var cb = document.createElement("input")
-          cb.setAttribute("type","checkbox")
-          if(item.complete) {
-            cb.setAttribute("checked","checked")
-          }
-          cb.id = "co_" + item.id
-          view.events.push(new Event("co_" + item.id,"change",
-            function(event) {
-              item.complete = event.target.checked
-              item.completeTime = (event.target.checked ? new Date().getTime() : null)
-              var temp = document.createElement("div")
-              temp.innerHTML = view.body
-              for(var i = 0; i < temp.childNodes[1].children.length; i++) {
-                var li = temp.childNodes[0].childNodes[i]
-                if(li.id == item.id) {
-                  li.querySelector("#co_" + item.id).setAttribute("checked","checked")
-                }
-              }
-              view.body = temp.innerHTML
-              view.message = new Message("task","update",item)
-            }
-          ))
-          var cx = document.createElement("a")
-          cx.id="cx_" + item.id
-          cx.appendChild(document.createTextNode("[ x ]"))
-          view.events.push(new Event("cx_" + item.id,"click",
-            function(event) {
-              item.active = false
-              view.message = new Message("task","delete",item)
-            }
-          ))
-          var span = document.createElement("span")
-          span.className = "task"
-          span.appendChild(document.createTextNode(item.label))
-          li.appendChild(span)
-          span = document.createElement("span")
-          span.className = "ctrl"
-          span.appendChild(cb)
-          span.appendChild(cx)
-          li.appendChild(span)
-          var temp = document.createElement("div")
-          temp.innerHTML = view.body
-          temp.childNodes[0].appendChild(li)
-          view.body = temp.innerHTML
-        }
+
+    function createListItem(view,item) {
+      var li = document.createElement("li")
+      var task = document.createElement("span")
+      var ctrl = document.createElement("span")
+      var cb = document.createElement("input")
+      var cx = document.createElement("a")
+
+      li.id = "task_" + item.id
+      task.id = "task"
+      ctrl.id = "ctrl"
+      cb.id = "co_" + item.id
+      cx.id = "cx_" + item.id
+
+      cb.setAttribute("type","checkbox")
+      if(item.complete) {
+        cb.setAttribute("checked","checked")
       }
 
-      if(message.target == "tasklist" && message.content) {
-        this.clear("#task_list")
-        message.content = message.content.task
+      task.appendChild(document.createTextNode(item.label))
+
+      cx.appendChild(document.createTextNode("[ x ]"))
+
+      ctrl.appendChild(cb)
+      ctrl.appendChild(cx)
+
+      li.appendChild(task)
+      li.appendChild(ctrl)
+
+      return li
+    }
+
+    function createListEvents(view,item) {
+      var complete = new Event()
+      complete.element = "co_" + item.id
+      complete.trigger = "change"
+      complete.action = function(event) {
+        item.complete = event.target.checked
+        item.completeTime = (item.complete ? new Date().getTime() : null)
+
+        var temp = document.createElement("div")
+        temp.innerHTML = view.body
+        temp.querySelector("#co_" + item.id).setAttribute("checked","checked")
+        view.body = temp.innerHTML
+
+        view.message = new Message("task","update",item)
       }
+
+      var cancel = new Event()
+      cancel.element = "cx_" + item.id
+      cancel.trigger = "click"
+      cancel.action = function(event) {
+        item.active = false
+        view.message = new Message("task","delete",item)
+      }
+
+      view.events.push(complete)
+      view.events.push(cancel)
+    }
+
+//It would be great to be able to get rid of this block
+    function addListItem(view,li) {
+      var temp = document.createElement("div")
+      temp.innerHTML = view.body
+      temp.querySelector("#task_list").appendChild(li)
+      view.body = temp.innerHTML
+    }
+
+    function processItem(view,item) {
+      if(item.active) {
+        var li = createListItem(view,item)
+        createListEvents(view,item)
+        addListItem(view,li)
+      }
+    }
+
+    if(message.target == "tasklist" && message.content) {
+      this.clear("#task_list")
+      message.content = message.content.task
+    }
+
+    if(message.action == "create") {
       if(Array.isArray(message.content)) {
         for(var i = 0; i < message.content.length; i++) {
-          addListItem(this,message.content[i])
+          processItem(this,message.content[i])
         }
       } else if(message.content) {
-        addListItem(this,message.content)
+        processItem(this,message.content)
       }
     } else if(message.action == "delete") {
       var temp = document.createElement("div")
       temp.innerHTML = this.body
-      for(var i = 0; i < temp.childNodes[0].children.length; i++) {
-        if(temp.childNodes[0].childNodes[i].id == message.content.id) {
-//          temp.childNodes[0].removeChild(temp.childNodes[1].childNodes[i])
-          temp.childNodes[0].childNodes[i].style.display = "none"
-        }
-      }
+      temp.querySelector("#task_" + message.content.id).style.display = "none"
       this.body = temp.innerHTML
     }
   }
