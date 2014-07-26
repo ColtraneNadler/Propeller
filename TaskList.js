@@ -5,8 +5,27 @@ taskList.body = "<ul id=\"task_list\"></ul>"
 
 taskList.registerReceiver(
   function(message) {
+    if(message.target == "tasklist" && message.content) {
+      this.clear("#task_list")
+      message.content = message.content.task
+    }
 
-    function createListItem(view,item) {
+    if(message.action == "create") {
+      if(Array.isArray(message.content)) {
+        for(var i = 0; i < message.content.length; i++) {
+          processItem(this,message.content[i])
+        }
+      } else if(message.content) {
+        processItem(this,message.content)
+      }
+    } else if(message.action == "delete") {
+      var temp = document.createElement("div")
+      temp.innerHTML = this.body
+      temp.querySelector("#task_" + message.content.id).style.display = "none"
+      this.body = temp.innerHTML
+    }
+
+    function createListItem(item) {
       var li = document.createElement("li")
       var task = document.createElement("span")
       var ctrl = document.createElement("span")
@@ -14,8 +33,8 @@ taskList.registerReceiver(
       var cx = document.createElement("a")
 
       li.id = "task_" + item.id
-      task.id = "task"
-      ctrl.id = "ctrl"
+      task.className = "task"
+      ctrl.className = "ctrl"
       cb.id = "co_" + item.id
       cx.id = "cx_" + item.id
 
@@ -75,30 +94,10 @@ taskList.registerReceiver(
 
     function processItem(view,item) {
       if(item.active) {
-        var li = createListItem(view,item)
+        var li = createListItem(item)
         createListEvents(view,item)
         addListItem(view,li)
       }
-    }
-
-    if(message.target == "tasklist" && message.content) {
-      this.clear("#task_list")
-      message.content = message.content.task
-    }
-
-    if(message.action == "create") {
-      if(Array.isArray(message.content)) {
-        for(var i = 0; i < message.content.length; i++) {
-          processItem(this,message.content[i])
-        }
-      } else if(message.content) {
-        processItem(this,message.content)
-      }
-    } else if(message.action == "delete") {
-      var temp = document.createElement("div")
-      temp.innerHTML = this.body
-      temp.querySelector("#task_" + message.content.id).style.display = "none"
-      this.body = temp.innerHTML
     }
   }
 )
