@@ -16,6 +16,12 @@ function View() {
   this.events = []
 }
 
+View.prototype.setBody = function(body) {
+  var temp = document.createElement("div")
+  temp.innerHTML = body
+  this.body = temp.innerHTML
+}
+
 View.prototype.clear = function(target) {
   var temp = document.createElement("div")
   temp.innerHTML = this.body
