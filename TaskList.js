@@ -1,7 +1,7 @@
 taskList = new View()
 taskList.label = "Tasks"
 taskList.head = "<h1>Propeller</h1>"
-taskList.body = "<ul id=\"task_list\"></ul>"
+taskList.body = "<ul id=\"task_list\"></ul><div id=\"make_task\"></div>"
 
 taskList.registerReceiver(
   function(message) {

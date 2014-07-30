@@ -56,12 +56,16 @@ App.prototype.getViewFromLabel = function(label) {
 
 //more to come here
 App.prototype.setActiveView = function(view) {
+  view.active = true
   this.activeView = view
   this.show(view)
 }
 
 App.prototype.show = function(view) {
-  if(view.target) {
+  if(view.target && this.body.querySelector("#" + view.target)) {
+    var target = this.body.querySelector("#" + view.target)
+    target.innerHTML = view.head + view.body + view.foot
+  } else if (view.target) {
   } else {
     this.head.innerHTML = view.head
 //    this.menu.innerHTML = view.menu

@@ -13,6 +13,7 @@ function View() {
   this.body = ""
   this.foot = ""
 
+  this.active = false
   this.events = []
 }
 

@@ -1,4 +1,6 @@
 function ModalView(target) {
-  this.view = new View()
-  this.target = target || ""
+  var that = new View()
+  that.target = target || ""
+
+  return that
 }
