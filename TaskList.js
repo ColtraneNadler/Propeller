@@ -7,6 +7,9 @@ taskList.registerReceiver(
   function(message) {
     if(message.target == "tasklist" && message.content) {
       this.clear("#task_list")
+      while(this.events.length > 0) {
+        this.events.pop()
+      }
       message.content = message.content.task
       message.target  = "task"
     }

@@ -8,6 +8,9 @@ tagList.registerReceiver(
 
     if(message.target == "tasklist" && message.content) {
       this.clear("#tag_list")
+      while(this.events.length > 0) {
+        this.events.pop()
+      }
       message.content = message.content.tag
       message.target = "tag"
     }
