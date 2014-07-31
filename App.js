@@ -1,5 +1,6 @@
 function App() {
   this.views = []
+  this.events = []
 }
 
 App.prototype.registerView = function(view) {
@@ -8,17 +9,18 @@ App.prototype.registerView = function(view) {
 
 App.setActiveView = function(view) {
   view.active = true
+  this.events = view.events
 }
 
 App.prototype.add = function(view) {
-  view.active = true
-  this.body.insertBefore(view.render(),this.footer)
+  var section = document.createElement("section")
+  section.id = "view_" + view.id
+  this.body.insertBefore(section,this.footer)
 }
 
 App.prototype.remove = function(view) {
-  view.active = false
-  this.body.removeChild(view.render())
-  view.destroy()
+  var section = this.body.querySelector("#view_" + view.id)
+  this.body.removeChild(section)
 }
 
 App.prototype.signal = function() {
@@ -27,9 +29,7 @@ App.prototype.signal = function() {
 App.prototype.receive = function(message) {
 }
 
-App.prototype.show = function() {
+App.prototype.update = function() {
   for(var i = 0; i < this.views.length; i++) {
-    if(this.views[i].active)
-      this.add(this.views[i])
   }
 }
