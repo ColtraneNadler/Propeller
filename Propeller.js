@@ -10,6 +10,8 @@ window.onload = function() {
   propeller.registerView(addTask,true)
   propeller.registerView(addTag,true)
   propeller.registerView(taskList,true)
+  propeller.registerView(tagList,true)
   propeller.registerView(taskStats,true)
+
   propeller.setActiveView(basicView)
 }

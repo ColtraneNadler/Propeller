@@ -8,9 +8,10 @@ taskList.registerReceiver(
     if(message.target == "tasklist" && message.content) {
       this.clear("#task_list")
       message.content = message.content.task
+      message.target  = "task"
     }
 
-    if(message.action == "create") {
+    if(message.target == "task" && message.action == "create") {
       if(Array.isArray(message.content)) {
         for(var i = 0; i < message.content.length; i++) {
           processItem(this,message.content[i])
@@ -18,7 +19,7 @@ taskList.registerReceiver(
       } else if(message.content) {
         processItem(this,message.content)
       }
-    } else if(message.action == "delete") {
+    } else if(message.target == "task" && message.action == "delete") {
       var temp = document.createElement("div")
       temp.innerHTML = this.body
       temp.querySelector("#task_" + message.content.id).style.display = "none"
