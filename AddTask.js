@@ -1,5 +1,5 @@
 addTask = new View()
-addTask.label = "Add"
+addTask.label = "Add Task"
 addTask.head = "<h1>Propeller</h1>"
 addTask.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" autofocus=\"autofocus\"/>"
 
