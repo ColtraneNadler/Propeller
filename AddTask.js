@@ -94,6 +94,8 @@ addTask.events.push(new Event("input","keydown",
       task.complete = false
       task.active = true
 
+//tag.tasks might be better than tasks.tags
+//make tasks an attribute of tags?
       var tags = event.target.parentNode.querySelector("#tag_list")
       for(var i = 0; i < tags.children.length; i++) {
         var id = tags.children[i].id.substr("tag_".length)

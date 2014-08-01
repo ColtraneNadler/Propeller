@@ -56,6 +56,7 @@ App.prototype.getViewFromLabel = function(label) {
 //more to come here
 App.prototype.setActiveView = function(view) {
   this.activeView = view
+//message is specific, not generic
   view.get(new Message("tasklist","create",this.store.data))
   this.show(view)
 }
