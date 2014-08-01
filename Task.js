@@ -13,5 +13,5 @@ function Task() {
   this.creationTime = new Date().getTime()
   this.completeTime = null;
 
-  this.tags = []
+  this.tags = {}
 }
