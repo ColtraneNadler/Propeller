@@ -23,6 +23,7 @@ App.prototype.add = function(view) {
 //is setActiveView the only time a view is made active?
   var section = document.createElement("section")
   section.id = "view_" + view.id
+  section.appendChild(view.page)
   this.body.insertBefore(section,this.foot)
 }
 
