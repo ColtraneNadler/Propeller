@@ -1,6 +1,7 @@
 taskList = new View()
 taskList.label = "Tasks"
 taskList.head = "<h1>Propeller</h1>"
+taskList.menu = "<ul id=\"tag_list\"></ul>"
 taskList.body = "<ul id=\"task_list\"></ul>"
 
 taskList.registerReceiver(
@@ -10,6 +11,15 @@ taskList.registerReceiver(
       while(this.events.length > 0) {
         this.events.pop()
       }
+      this.clear("#tag_list","menu")
+
+      tagList = message.content.tag
+//throws an error if there are no tags
+      for(var i = 0; i < tagList.length; i++) {
+//        console.log(tagList[i].label)
+        buildMenu(this,tagList[i])
+      }
+
       message.content = message.content.task
       message.target  = "task"
     }
@@ -102,6 +112,25 @@ taskList.registerReceiver(
         createListEvents(view,item)
         addListItem(view,li)
       }
+    }
+
+    function createMenuItem(item) {
+      var li = document.createElement("li")
+      li.id = "tag_" + item.id
+      li.appendChild(document.createTextNode(item.label))
+      return li
+    }
+
+    function addMenuItem(view,li) {
+      var temp = document.createElement("div")
+      temp.innerHTML = view.menu
+      temp.querySelector("#tag_list").appendChild(li)
+      view.menu = temp.innerHTML
+    }
+
+    function buildMenu(view,item) {
+      var li = createMenuItem(item)
+      addMenuItem(view,li)
     }
   }
 )

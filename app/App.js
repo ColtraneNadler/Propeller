@@ -66,7 +66,7 @@ App.prototype.show = function(view) {
 /**
   this.menu.innerHTML = view.menu
 **/
-  this.body.innerHTML = view.body
+  this.body.innerHTML = (view.menu ? view.menu + view.body : view.body)
   this.foot.innerHTML = view.foot
 
   this.events = view.events
