@@ -6,7 +6,7 @@ taskList.body = "<ul id=\"task_list\"></ul>"
 taskList.registerReceiver(
   function(message) {
     if(message.target == "tasklist" && message.content) {
-      this.clear("#task_list")
+      this.clear("#task_list","body")
       while(this.events.length > 0) {
         this.events.pop()
       }

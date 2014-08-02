@@ -6,7 +6,7 @@ addTask.body = "<ul id=\"tag_list\"></ul><input type=\"text\" id=\"input\" value
 addTask.registerReceiver(
   function(message) {
     if(message.target == "tasklist" && message.content) {
-      this.clear("#tag_list")
+      this.clear("#tag_list","body")
 //maybe this could be determined by the length of tasklist or something
       while(this.events.length > 3) {
         this.events.pop()

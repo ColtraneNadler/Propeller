@@ -7,7 +7,7 @@ tagList.registerReceiver(
   function(message) {
 
     if(message.target == "tasklist" && message.content) {
-      this.clear("#tag_list")
+      this.clear("#tag_list","body")
       while(this.events.length > 0) {
         this.events.pop()
       }

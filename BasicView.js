@@ -59,7 +59,7 @@ basicView.registerReceiver(
       }
 
       if(message.target == "tasklist" && message.content) {
-        this.clear("#task_list")
+        this.clear("#task_list","body")
         message.content = message.content.task
       }
       if(Array.isArray(message.content)) {

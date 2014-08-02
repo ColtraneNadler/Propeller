@@ -16,14 +16,14 @@ function View() {
   this.events = []
 }
 
-View.prototype.clear = function(target) {
+View.prototype.clear = function(element,target) {
   var temp = document.createElement("div")
-  temp.innerHTML = this.body
-  var container = temp.querySelector(target)
+  temp.innerHTML = this[target]
+  var container = temp.querySelector(element)
   while(container.firstChild) {
     container.removeChild(container.firstChild)
   }
-  this.body = temp.innerHTML
+  this[target] = temp.innerHTML
 }
 
 View.prototype.registerTransmitter = function(transmitter) {
