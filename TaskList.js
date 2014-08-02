@@ -121,6 +121,17 @@ taskList.registerReceiver(
       return li
     }
 
+    function createMenuEvents(view,item) {
+      var click = new Event()
+      click.element = "tag_" + item.id
+      click.trigger = "click"
+      click.action = function(event) {
+        console.log(item.label)
+      }
+
+      view.events.push(click)
+    }
+
     function addMenuItem(view,li) {
       var temp = document.createElement("div")
       temp.innerHTML = view.menu
@@ -130,6 +141,7 @@ taskList.registerReceiver(
 
     function buildMenu(view,item) {
       var li = createMenuItem(item)
+      createMenuEvents(view,item)
       addMenuItem(view,li)
     }
   }
