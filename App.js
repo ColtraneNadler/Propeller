@@ -13,9 +13,16 @@ App.prototype.registerView = function(view) {
   this.views.push(view)
 }
 
-App.setActiveView = function(view) {
+App.prototype.setActiveView = function(view) {
   view.active = true
   this.events = view.events
+
+  for(var i = 0; i < view.events.length; i++) {
+    if(document.getElementById(view.events[i].element)) {
+      var el = document.getElementById(view.events[i].element)
+      el.addEventListener(view.events[i].trigger,this.signal.bind(this))
+    }
+  }
 }
 
 App.prototype.add = function(view) {
@@ -29,14 +36,15 @@ App.prototype.add = function(view) {
 
 App.prototype.remove = function(view) {
 //if a view is removed, should it active = false
+//how are views de-activated
   var section = this.body.querySelector("#view_" + view.id)
   this.body.removeChild(section)
 }
-
+/**
 App.prototype.signal = function() {
 //any code here should be app specific
 }
-
+**/
 App.prototype.receive = function(message) {
 //any code here should be app specific
 }
