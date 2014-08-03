@@ -33,7 +33,7 @@ App.prototype.setActiveView = function(view) {
   this.show(view)
 }
 
-App.prototype.show = function(view) {
+App.prototype.show = function(view,state) {
   this.head.innerHTML = view.head
   this.menu.innerHTML = view.menu
   this.body.innerHTML = view.body
@@ -43,9 +43,11 @@ App.prototype.show = function(view) {
   for(var i = 0; i < view.events.length; i++) {
     document.getElementById(view.events[i].element).addEventListener(view.events[i].trigger,this.signal.bind(this))
   }
-  for(var i = 0; i < this.body.children.length; i++) {
-    if(this.body.children[i].autofocus) {
-      this.body.children[i].focus()
+  if(state == "create") {
+    for(var i = 0; i < this.body.children.length; i++) {
+      if(this.body.children[i].autofocus) {
+        this.body.children[i].focus()
+      }
     }
   }
 }
@@ -64,9 +66,7 @@ App.prototype.signal = function(event) {
           this.views[j].get(message)
         }
         this.confirmReceipt(this.activeView)
-        if(action == "create" || action == "delete") {
-          this.show(this.activeView)
-        }
+        this.show(this.activeView,action)
       }
     }
   }

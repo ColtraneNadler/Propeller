@@ -24,8 +24,13 @@ basicView.registerReceiver(
               temp.innerHTML = view.body
               for(var i = 0; i < temp.childNodes[1].children.length; i++) {
                 var li = temp.childNodes[1].childNodes[i]
-                if(li.id == item.id) {
+                console.log(event.target.checked)
+                if(li.id == item.id && event.target.checked) {
+                  li.firstChild.className = "task complete"
                   li.querySelector("#co_" + item.id).setAttribute("checked","checked")
+                } else if(li.id == item.id) {
+                  li.firstChild.className = "task"
+                  li.querySelector("#co_" + item.id).removeAttribute("checked")
                 }
               }
               view.body = temp.innerHTML
@@ -42,7 +47,11 @@ basicView.registerReceiver(
             }
           ))
           var span = document.createElement("span")
-          span.className = "task"
+          if(item.complete) {
+            span.className = "task complete"
+          } else {
+            span.className = "task"
+          }
           span.appendChild(document.createTextNode(item.task))
           li.appendChild(span)
           span = document.createElement("span")

@@ -90,3 +90,7 @@ span {
   position: relative;
   float: right;
 }
+
+.complete {
+  text-decoration: line-through;
+}
