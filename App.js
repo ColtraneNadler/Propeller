@@ -19,6 +19,17 @@ App.prototype.registerView = function(view) {
   this.views.push(view)
 }
 
+//does not account for the possibility of name sharing
+App.prototype.getView = function(name) {
+  var view = null
+  for(var i = 0; i < this.views.length && !view; i++) {
+    if(this.views[i].name == name) {
+      view = this.views[i]
+    }
+  }
+  return view
+}
+
 App.prototype.setActiveView = function(view) {
   view.active = true
   this.events = view.events
