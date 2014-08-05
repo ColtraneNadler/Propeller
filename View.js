@@ -21,6 +21,15 @@ function View() {
 }
 
 View.prototype.render = function() {
+//needs to check each element to see if it has anything before adding it
+  this.page = document.createDocumentFragment()
+//the view should convert all string elements to dom elements internally
+//  this.page.innerHTML = this.head + this.menu + this.body + this.foot
+  this.page.appendChild(this.head)
+//  this.page.appendChild(this.menu)
+  this.page.appendChild(this.body)
+//  this.page.appendChild(this.foot)
+  return this.page
 }
 
 View.prototype.destroy = function() {

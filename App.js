@@ -47,7 +47,7 @@ App.prototype.add = function(view) {
 //is setActiveView the only time a view is made active?
   var section = document.createElement("section")
   section.id = "view_" + view.id
-  section.appendChild(view.page)
+  section.appendChild(view.render())
   this.body.insertBefore(section,this.foot)
 }
 
@@ -65,9 +65,10 @@ App.prototype.signal = function() {
 App.prototype.receive = function(message) {
 //any code here should be app specific
 }
-
+/**
 App.prototype.update = function() {
 //any code here should be app specific
   for(var i = 0; i < this.views.length; i++) {
   }
 }
+**/
