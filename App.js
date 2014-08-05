@@ -56,16 +56,18 @@ App.prototype.remove = function(view) {
 //how are views de-activated
   var section = this.body.querySelector("#view_" + view.id)
   this.body.removeChild(section)
+  view.active = false
+  view.destroy()
 }
 /**
 App.prototype.signal = function() {
 //any code here should be app specific
 }
-**/
+
 App.prototype.receive = function(message) {
 //any code here should be app specific
 }
-/**
+
 App.prototype.update = function() {
 //any code here should be app specific
   for(var i = 0; i < this.views.length; i++) {

@@ -33,4 +33,5 @@ View.prototype.render = function() {
 }
 
 View.prototype.destroy = function() {
+  this.page = null
 }
