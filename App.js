@@ -5,6 +5,9 @@ function Message(target,action,content) {
 }
 
 function App() {
+  this.default = ""
+  this.activeView = ""
+
   this.head = ""
   this.menu = ""
   this.body = ""
@@ -31,6 +34,7 @@ App.prototype.getView = function(name) {
 }
 
 App.prototype.setActiveView = function(view) {
+  this.activeView = view
   view.active = true
   this.events = view.events
 
