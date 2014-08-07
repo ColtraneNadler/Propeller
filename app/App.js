@@ -18,6 +18,7 @@ function App(dataPoint) {
 }
 
 App.prototype.registerView = function(view,listed) {
+  view.get(new Message("tasklist","create",this.store.data))
   this.views.push(view)
   if(listed) {
     this.populateMenu(view)
@@ -55,6 +56,7 @@ App.prototype.getViewFromLabel = function(label) {
 
 //more to come here
 App.prototype.setActiveView = function(view) {
+  view.active = true
   this.activeView = view
 //message is specific, not generic
   view.get(new Message("tasklist","create",this.store.data))
@@ -68,8 +70,21 @@ App.prototype.show = function(view,state) {
 **/
   this.body.innerHTML = (view.menu ? view.menu + view.body : view.body)
   this.foot.innerHTML = view.foot
+}
 
+App.prototype.show = function(view) {
+  if(view.target && this.body.querySelector("#" + view.target)) {
+    var target = this.body.querySelector("#" + view.target)
+    target.innerHTML = view.head + view.body + view.foot
+  } else if (view.target) {
+  } else {
+    this.head.innerHTML = view.head
+//    this.menu.innerHTML = view.menu
+    this.body.innerHTML = view.body
+    this.foot.innerHTML = view.foot
+  }
   this.events = view.events
+
   for(var i = 0; i < view.events.length; i++) {
 //A better solution is to have the view drop the event and delete the element
     if(document.getElementById(view.events[i].element)) {
@@ -91,15 +106,19 @@ App.prototype.signal = function(event) {
       this.events[i].action(event)
 
 //shouldn't require a view to be active to send a message
-      var message = this.activeView.send()
-      if(message) {
-        var action = message.action
-        this.receive(message)
-        for(var j = 0; j < this.views.length; j++) {
-          this.views[j].get(message)
+      for(var j = 0; j < this.views.length; j++) {
+        var message = this.views[j].send()
+        if(message) {
+          var action = message.action
+          this.receive(message)
+          for(var k = 0; k < this.views.length; k++) {
+            this.views[k].get(message)
+          }
+          this.confirmReceipt(this.views[j])
+          if(action == "create" || action == "delete") {
+            this.show(this.activeView)
+          }
         }
-        this.confirmReceipt(this.activeView)
-        this.show(this.activeView,action)
       }
     }
   }

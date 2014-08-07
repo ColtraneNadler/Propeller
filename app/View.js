@@ -13,10 +13,17 @@ function View() {
   this.body = ""
   this.foot = ""
 
+  this.active = false
   this.events = []
 }
 
-View.prototype.clear = function(element,target) {
+View.prototype.setBody = function(body) {
+  var temp = document.createElement("div")
+  temp.innerHTML = body
+  this.body = temp.innerHTML
+}
+
+View.prototype.clear = function(target) {
   var temp = document.createElement("div")
   temp.innerHTML = this[target]
   var container = temp.querySelector(element)
