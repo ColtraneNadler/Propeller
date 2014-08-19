@@ -11,21 +11,26 @@ window.onload = function() {
   propeller.foot = document.getElementsByTagName("footer")[0]
 
   propeller.signal = function() {
+    for(var i = 0; i < this.events.length; i++) {
+      var eve = this.events[i]
+      if(ev.trigger == event.type && ev.element == event.target.id) {
+        var message = ev.action(event)
+        console.log(message ? message : "no message")
+        if(message) {
+          for(var j = 0; j < this.views.length; j++) {
+            this.views[k].get(message)
+          }
+        }
+      }
+    }
   }
 
   propeller.update = function() {
   }
-/**
-//I'm not sure how all this will work from now on
+
   propeller.registerView(basicView,false)
-  propeller.registerView(addTask,true)
-  propeller.registerView(addTag,true)
-  propeller.registerView(taskList,true)
-  propeller.registerView(tagList,true)
-  propeller.registerView(taskStats,true)
 
   prop.add(BasicView)
 
   propeller.setActiveView(basicView)
-**/
 }
