@@ -28,6 +28,7 @@ window.onload = function() {
               section.appendChild(this.views[i].render())
             }
           }
+          this.setActiveView(basicView)
         }
       }
     }
