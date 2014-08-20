@@ -12,25 +12,39 @@ window.onload = function() {
 
   propeller.signal = function() {
     for(var i = 0; i < this.events.length; i++) {
-      var eve = this.events[i]
+      var ev = this.events[i]
       if(ev.trigger == event.type && ev.element == event.target.id) {
         var message = ev.action(event)
         console.log(message ? message : "no message")
         if(message) {
+          this.update(message)
           for(var j = 0; j < this.views.length; j++) {
-            this.views[k].get(message)
+            if(this.views[i].active) {
+              this.views[j].get(this.state)
+              var section = this.body.querySelector("#view_" + this.views[i].id)
+              while(section.firstChild) {
+                section.removeChild(section.firstChild)
+              }
+              section.appendChild(this.views[i].render())
+            }
           }
         }
       }
     }
   }
 
-  propeller.update = function() {
+  propeller.update = function(message) {
+    if(message.action == "create") {
+      if(!this.state[message.target]) {
+        this.state[message.target] = []
+      }
+      this.state[message.target].push(message.content)
+    }
   }
 
   propeller.registerView(basicView,false)
 
-  prop.add(BasicView)
+  propeller.add(basicView)
 
   propeller.setActiveView(basicView)
 }
