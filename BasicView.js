@@ -57,7 +57,7 @@ basicView.registerReceiver(
 
 //perhaps target should be a reference to the query selection
     function addListItem(view,target,li) {
-      console.log(view)
+//      console.log(view)
       view.body.querySelector(target).appendChild(li)
     }
   }

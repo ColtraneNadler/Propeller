@@ -2,6 +2,8 @@ window.onload = function() {
   propeller = new App()
   propeller.registerStore(new Store("propeller"))
   propeller.default = basicView
+  propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : {}
+//  console.log(propeller.state)
 
   propeller.head = document.getElementsByTagName("header")[0]
   propeller.menu = document.getElementsByTagName("nav")[0]
@@ -15,7 +17,7 @@ window.onload = function() {
       var ev = this.events[i]
       if(ev.trigger == event.type && ev.element == event.target.id) {
         var message = ev.action(event)
-        console.log(message ? message : "no message")
+//        console.log(message ? message : "no message")
         if(message) {
           this.update(message)
           for(var j = 0; j < this.views.length; j++) {
@@ -40,6 +42,7 @@ window.onload = function() {
         this.state[message.target] = []
       }
       this.state[message.target].push(message.content)
+      this.store.door[this.store.key] = JSON.stringify(this.state)
     }
   }
 
