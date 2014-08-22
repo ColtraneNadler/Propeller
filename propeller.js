@@ -21,13 +21,13 @@ window.onload = function() {
         if(message) {
           this.update(message)
           for(var j = 0; j < this.views.length; j++) {
-            if(this.views[i].active) {
+            if(this.views[j].active) {
               this.views[j].get(this.state)
-              var section = this.body.querySelector("#view_" + this.views[i].id)
+              var section = this.body.querySelector("#view_" + this.views[j].id)
               while(section.firstChild) {
                 section.removeChild(section.firstChild)
               }
-              section.appendChild(this.views[i].render())
+              section.appendChild(this.views[j].render())
             }
           }
           this.setActiveView(basicView)
@@ -42,8 +42,8 @@ window.onload = function() {
         this.state[message.target] = []
       }
       this.state[message.target].push(message.content)
-      this.store.door[this.store.key] = JSON.stringify(this.state)
     }
+    this.store.door[this.store.key] = JSON.stringify(this.state)
   }
 
   propeller.registerView(basicView,false)
