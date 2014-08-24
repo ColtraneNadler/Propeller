@@ -3,8 +3,6 @@ addTag.label = "Add Tag"
 addTag.head = "<h1>Propeller</h1>"
 addTag.body = "<input type=\"text\" id=\"input\" value=\"chores\" autofocus=\"autofocus\"/>"
 
-addTag.registerTransmitter(function() { return this.message })
-
 addTag.events.push(new Event("input","keydown",
   function(event) {
     if(event.keyCode == 13 && event.target.value != "") {
@@ -12,10 +10,10 @@ addTag.events.push(new Event("input","keydown",
       tag.label = event.target.value
       tag.active = true
 
-      this.message = new Message("tag","create",tag)
       event.target.value = ""
+      return new Message("tag","create",tag)
     }
-  }.bind(addTag)
+  }
 ))
 
 addTag.events.push(new Event("input","focus",

@@ -46,7 +46,12 @@ window.onload = function() {
     this.store.door[this.store.key] = JSON.stringify(this.state)
   }
 
-  propeller.registerView(basicView,false)
+  propeller.registerView(basicView)
+  propeller.registerView(addTag)
+  propeller.registerView(addTask)
+
+  propeller.addToMenu(addTag)
+  propeller.addToMenu(addTask)
 
   propeller.add(basicView)
 
