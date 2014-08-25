@@ -4,49 +4,42 @@ tagList.head = "<h1>Propeller</h1>"
 tagList.body = "<ul id=\"tag_list\"></ul>"
 
 tagList.registerReceiver(
-  function(message) {
-
-    if(message.target == "tasklist" && message.content) {
-      this.clear("#tag_list","body")
-      while(this.events.length > 0) {
-        this.events.pop()
-      }
-      message.content = message.content.tag
-      message.target = "tag"
+  function(state) {
+    this.domify("body")
+    var tag_list = this.body.querySelector("#tag_list")
+    while(tag_list.firstChild) {
+      tag_list.removeChild(tag_list.firstChild)
+    }
+    if(state.tag && state.tag.length > 0) {
+      buildList(this,"#tag_list",state.tag)
     }
 
-    if(message.target == "tag" && message.action == "create") {
-      if(Array.isArray(message.content)) {
-        for(var i = 0; i < message.content.length; i++) {
-          processItem(this,message.content[i])
+    function buildList(view,target, item) {
+      for(var i = 0; i < item.length; i++) {
+        if(item[i].active) {
+          var li = createListItem(item[i])
+          createItemEvents(view,item[i])
+          addListItem(view,target,li)
         }
-      } else if(message.content) {
-        processItem(this,message.content)
       }
-    } else if(message.target == "tag" && message.action == "delete") {
-      var temp = document.createElement("div")
-      temp.innerHTML = this.body
-      console.log(temp.querySelector("#tag_" + message.content.id))
-      temp.querySelector("#tag_" + message.content.id).style.display = "none"
-      this.body = temp.innerHTML
     }
 
     function createListItem(item) {
       var li = document.createElement("li")
       var tag = document.createElement("span")
       var ctrl = document.createElement("span")
-      var cx = document.createElement("a")
+      var rm = document.createElement("a")
 
       li.id = "tag_" + item.id
-      tag.className = "task"
+      tag.className = "label"
       ctrl.className = "ctrl"
-      cx.id = "cx_" + item.id
+      rm.id = "rm_" + item.id
+
 
       tag.appendChild(document.createTextNode(item.label))
+      rm.appendChild(document.createTextNode("[ x ]"))
 
-      cx.appendChild(document.createTextNode("[ x ]"))
-
-      ctrl.appendChild(cx)
+      ctrl.appendChild(rm)
 
       li.appendChild(tag)
       li.appendChild(ctrl)
@@ -54,34 +47,21 @@ tagList.registerReceiver(
       return li
     }
 
-    function createListEvents(view,item) {
-      var cancel = new Event()
-      cancel.element = "cx_" + item.id
-      cancel.trigger = "click"
-      cancel.action = function(event) {
+    function createItemEvents(view,item) {
+      var remove = new Event()
+      remove.element = "rm_" + item.id
+      remove.trigger = "click"
+      remove.action = function(event) {
         item.active = false
-        view.message = new Message("tag","delete",item)
+        return new Message("tag","delete",item)
       }
 
-      view.events.push(cancel)
+      view.events.push(remove)
     }
 
-//It would be great to be able to get rid of this block
-    function addListItem(view,li) {
-      var temp = document.createElement("div")
-      temp.innerHTML = view.body
-      temp.querySelector("#tag_list").appendChild(li)
-      view.body = temp.innerHTML
-    }
-
-    function processItem(view,item) {
-      if(item.active) {
-        var li = createListItem(item)
-        createListEvents(view,item)
-        addListItem(view,li)
-      }
+//perhaps target should be a reference to the query selection
+    function addListItem(view,target,li) {
+      view.body.querySelector(target).appendChild(li)
     }
   }
 )
-
-tagList.registerTransmitter(function() { return this.message })

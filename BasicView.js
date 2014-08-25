@@ -33,13 +33,13 @@ basicView.registerReceiver(
       var task = document.createElement("span")
       var ctrl = document.createElement("span")
       var cb = document.createElement("input")
-      var cx = document.createElement("a")
+      var rm = document.createElement("a")
 
       li.id = "task_" + item.id
-      task.className = "task"
+      task.className = "label"
       ctrl.className = "ctrl"
       cb.id = "co_" + item.id
-      cx.id = "cx_" + item.id
+      rm.id = "rm_" + item.id
 
       cb.setAttribute("type","checkbox")
       if(item.complete) {
@@ -47,10 +47,10 @@ basicView.registerReceiver(
       }
 
       task.appendChild(document.createTextNode(item.label))
-      cx.appendChild(document.createTextNode("[ x ]"))
+      rm.appendChild(document.createTextNode("[ x ]"))
 
       ctrl.appendChild(cb)
-      ctrl.appendChild(cx)
+      ctrl.appendChild(rm)
 
       li.appendChild(task)
       li.appendChild(ctrl)
@@ -68,16 +68,16 @@ basicView.registerReceiver(
         return new Message("task","update",item)
       }
 
-      var cancel = new Event()
-      cancel.element = "cx_" + item.id
-      cancel.trigger = "click"
-      cancel.action = function(event) {
+      var remove = new Event()
+      remove.element = "rm_" + item.id
+      remove.trigger = "click"
+      remove.action = function(event) {
         item.active = false
         return new Message("task","delete",item)
       }
 
       view.events.push(complete)
-      view.events.push(cancel)
+      view.events.push(remove)
     }
 
 //perhaps target should be a reference to the query selection
