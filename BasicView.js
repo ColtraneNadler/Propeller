@@ -1,12 +1,10 @@
-basicView = new View()
-basicView.name = "BasicView"
-basicView.head = "<h1>Propeller</h1>"
-basicView.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" autofocus=\"autofocus\"/>" +
-                 "<ul id=\"task_list\"></ul>"
+basicView = new View("Home")
+basicView.set("head","<h1>Propeller</h1>")
+basicView.set("body","<input type=\"text\" id=\"bv_input\" value=\"walk the dog\" autofocus=\"autofocus\"/><ul id=\"task_list\"></ul>")
+basicView.set("foot","")
 
 basicView.registerReceiver(
   function(state) {
-    this.domify("body")
     var task_list = this.body.querySelector("#task_list")
     while(task_list.firstChild) {
       task_list.removeChild(task_list.firstChild)
@@ -87,7 +85,7 @@ basicView.registerReceiver(
   }
 )
 
-basicView.events.push(new Event("input","keydown",
+basicView.events.push(new Event("bv_input","keydown",
   function(event) {
     if(event.keyCode == 13 && event.target.value != "") {
       var task = new Task()
@@ -101,7 +99,7 @@ basicView.events.push(new Event("input","keydown",
   }
 ))
 
-basicView.events.push(new Event("input","focus",
+basicView.events.push(new Event("bv_input","focusin",
   function(event) {
     if(event.target.value == "walk the dog") {
       event.target.value = ""
@@ -109,7 +107,7 @@ basicView.events.push(new Event("input","focus",
   }
 ))
 
-basicView.events.push(new Event("input","blur",
+basicView.events.push(new Event("bv_input","focusout",
   function(event) {
     if(event.target.value == "") {
       event.target.value = null

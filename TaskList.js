@@ -1,12 +1,11 @@
-taskList = new View()
-taskList.label = "Tasks"
-taskList.head = "<h1>Propeller</h1>"
-taskList.menu = "<ul id=\"tag_list\"></ul>"
-taskList.body = "<ul id=\"task_list\"></ul>"
+taskList = new View("Tasks")
+taskList.set("head","<h1>Propeller</h1>")
+//taskList.menu = "<ul id=\"tag_list\"></ul>"
+taskList.set("body","<ul id=\"task_list\"></ul>")
+taskList.set("foot","")
 
 taskList.registerReceiver(
   function(state) {
-    this.domify("body")
     var task_list = this.body.querySelector("#task_list")
     while(task_list.firstChild) {
       task_list.removeChild(task_list.firstChild)

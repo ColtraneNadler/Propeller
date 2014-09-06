@@ -1,36 +1,17 @@
 window.onload = function() {
   propeller = new App()
-  propeller.registerStore(new Store("propeller"))
-  propeller.default = basicView
-  propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : {}
-//  console.log(propeller.state)
 
-  propeller.head = document.getElementsByTagName("header")[0]
-  propeller.menu = document.getElementsByTagName("nav")[0]
-//I don't like the way that body is set now
-  propeller.body = document.body
-//  propeller.body = document.getElementsByTagName("section")[0]
-  propeller.foot = document.getElementsByTagName("footer")[0]
-
-  propeller.signal = function() {
+  propeller.signal = function(event) {
+//    console.log(event)
     for(var i = 0; i < this.events.length; i++) {
       var ev = this.events[i]
+      var message
       if(ev.trigger == event.type && ev.element == event.target.id) {
-        var message = ev.action(event)
-//        console.log(message ? message : "no message")
-        if(message) {
+        message = ev.action(event)
+        if(message && message.target == "activeView") {
+          this.setActiveView(this.views[message.content])
+        } else if(message) {
           this.update(message)
-          for(var j = 0; j < this.views.length; j++) {
-            if(this.views[j].active) {
-              this.views[j].get(this.state)
-              var section = this.body.querySelector("#view_" + this.views[j].id)
-              while(section.firstChild) {
-                section.removeChild(section.firstChild)
-              }
-              section.appendChild(this.views[j].render())
-            }
-          }
-          this.setActiveView(basicView)
         }
       }
     }
@@ -43,24 +24,50 @@ window.onload = function() {
       }
       this.state[message.target].push(message.content)
     }
-    this.store.door[this.store.key] = JSON.stringify(this.state)
+    console.log(this.state)
+//    this.store.door[this.store.key] = JSON.stringify(this.state)
+
+    var keys = Object.keys(this.views)
+    for(var i = 0; i < keys.length; i++) {
+      if(this.state.activeView == this.views[keys[i]].id) {
+        this.setActiveView(this.views[keys[i]])
+      } else if(this.views[keys[i]].active) {
+        var section = this.body.querySelector("#view_" + this.views[keys[i]].id)
+        while(section && section.firstChild) {
+          section.removeChild(section.firstChild)
+        }
+        this.views[keys[i]].get(this.state)
+        section.appendChild(this.views[keys[i]].render())
+      }
+    }
   }
+
+ propeller.registerStore(new Store("propeller"))
+  propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : {}
+
+  propeller.head = document.getElementsByTagName("header")[0]
+  propeller.menu = document.getElementsByTagName("nav")[0]
+  propeller.body = document.body
+  propeller.foot = document.getElementsByTagName("footer")[0]
+
+  propeller.menu.onclick = propeller.signal.bind(propeller)
 
   propeller.registerView(basicView)
 
-  propeller.registerView(addTag)
+//  propeller.registerView(addTag)
   propeller.registerView(addTask)
 
-  propeller.registerView(tagList)
+//  propeller.registerView(tagList)
   propeller.registerView(taskList)
 
-  propeller.addToMenu(addTag)
+//  propeller.addToMenu(addTag)
   propeller.addToMenu(addTask)
 
-  propeller.addToMenu(tagList)
+//  propeller.addToMenu(tagList)
   propeller.addToMenu(taskList)
 
-  propeller.add(basicView)
+//  propeller.add(basicView)
 
   propeller.setActiveView(basicView)
+//  propeller.setActiveView(taskList)
 }

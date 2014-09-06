@@ -1,10 +1,9 @@
-addTask = new View()
+addTask = new View("Add Task")
+addTask.set("head","<h1>Propeller</h1>")
+addTask.set("body","<input type=\"text\" id=\"at_input\" value=\"walk the dog\" autofocus=\"autofocus\"/>")
+addTask.set("foot","")
 
-addTask.label = "Add Task"
-addTask.head = "<h1>Propeller</h1>"
-addTask.body = "<input type=\"text\" id=\"input\" value=\"walk the dog\" autofocus=\"autofocus\"/>"
-
-addTask.events.push(new Event("input","keydown",
+addTask.events.push(new Event("at_input","keydown",
   function(event) {
     if(event.keyCode == 13 && event.target.value != "") {
       var task = new Task()
@@ -22,12 +21,12 @@ addTask.events.push(new Event("input","keydown",
 //        }
 //      }
       event.target.value = ""
-      this.message = new Message("task","create",task)
+      return new Message("task","create",task)
     }
   }
 ))
 
-addTask.events.push(new Event("input","focus",
+addTask.events.push(new Event("at_input","focusin",
   function(event) {
     if(event.target.value == "walk the dog") {
       event.target.value = ""
@@ -35,7 +34,7 @@ addTask.events.push(new Event("input","focus",
   }
 ))
 
-addTask.events.push(new Event("input","blur",
+addTask.events.push(new Event("at_input","focusout",
   function(event) {
     if(event.target.value == "") {
       event.target.value = null
