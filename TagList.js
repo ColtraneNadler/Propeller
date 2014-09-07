@@ -1,11 +1,10 @@
-tagList = new View()
-tagList.label = "Tags"
-tagList.head = "<h1>Propeller</h1>"
-tagList.body = "<ul id=\"tag_list\"></ul>"
+tagList = new View("Tags")
+tagList.set("head","<h1>Propeller</h1>")
+tagList.set("body","<ul id=\"tag_list\"></ul>")
+tagList.set("foot","")
 
 tagList.registerReceiver(
   function(state) {
-    this.domify("body")
     var tag_list = this.body.querySelector("#tag_list")
     while(tag_list.firstChild) {
       tag_list.removeChild(tag_list.firstChild)

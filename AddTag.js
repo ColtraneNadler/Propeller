@@ -1,9 +1,9 @@
-addTag = new View()
-addTag.label = "Add Tag"
-addTag.head = "<h1>Propeller</h1>"
-addTag.body = "<input type=\"text\" id=\"input\" value=\"chores\" autofocus=\"autofocus\"/>"
+addTag = new View("Add Tag")
+addTag.set("head","<h1>Propeller</h1>")
+addTag.set("body","<input type=\"text\" id=\"addTag_input\" value=\"chores\" autofocus=\"autofocus\"/>")
+addTag.set("foot","")
 
-addTag.events.push(new Event("input","keydown",
+addTag.events.push(new Event("addTag_input","keydown",
   function(event) {
     if(event.keyCode == 13 && event.target.value != "") {
       var tag = new Tag()
@@ -16,7 +16,7 @@ addTag.events.push(new Event("input","keydown",
   }
 ))
 
-addTag.events.push(new Event("input","focus",
+addTag.events.push(new Event("addTag_input","focusin",
   function(event) {
     if(event.target.value == "chores") {
       event.target.value = ""
@@ -24,7 +24,7 @@ addTag.events.push(new Event("input","focus",
   }
 ))
 
-addTag.events.push(new Event("input","blur",
+addTag.events.push(new Event("addTag_input","focusout",
   function(event) {
     if(event.target.value == "") {
       event.target.value = null

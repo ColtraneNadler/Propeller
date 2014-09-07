@@ -2,7 +2,6 @@ window.onload = function() {
   propeller = new App()
 
   propeller.signal = function(event) {
-//    console.log(event)
     for(var i = 0; i < this.events.length; i++) {
       var ev = this.events[i]
       var message
@@ -54,16 +53,16 @@ window.onload = function() {
 
   propeller.registerView(basicView)
 
-//  propeller.registerView(addTag)
+  propeller.registerView(addTag)
   propeller.registerView(addTask)
 
-//  propeller.registerView(tagList)
+  propeller.registerView(tagList)
   propeller.registerView(taskList)
 
-//  propeller.addToMenu(addTag)
+  propeller.addToMenu(addTag)
   propeller.addToMenu(addTask)
 
-//  propeller.addToMenu(tagList)
+  propeller.addToMenu(tagList)
   propeller.addToMenu(taskList)
 
 //  propeller.add(basicView)
