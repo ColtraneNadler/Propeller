@@ -53,20 +53,11 @@ window.onload = function() {
 
   propeller.registerView(basicView)
 
-  propeller.registerView(addTag)
   propeller.registerView(addTask)
-
-  propeller.registerView(tagList)
   propeller.registerView(taskList)
 
-  propeller.addToMenu(addTag)
   propeller.addToMenu(addTask)
-
-  propeller.addToMenu(tagList)
   propeller.addToMenu(taskList)
 
-//  propeller.add(basicView)
-
   propeller.setActiveView(basicView)
-//  propeller.setActiveView(taskList)
 }
