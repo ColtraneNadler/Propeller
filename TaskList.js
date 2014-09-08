@@ -10,6 +10,9 @@ taskList.registerReceiver(
     while(task_list.firstChild) {
       task_list.removeChild(task_list.firstChild)
     }
+    while(this.events.length > 0) {
+      this.events.pop()
+    }
     if(state.task && state.task.length > 0) {
       buildList(this,"#task_list",state.task)
     }
