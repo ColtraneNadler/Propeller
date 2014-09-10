@@ -10,6 +10,7 @@ window.onload = function() {
         if(message && message.target == "activeView") {
           this.setActiveView(this.views[message.content])
         } else if(message) {
+//should update happen on setActiveView as well
           this.update(message)
         }
       }
@@ -23,7 +24,6 @@ window.onload = function() {
       }
       this.state[message.target].push(message.content)
     }
-    console.log(this.state)
 //    this.store.door[this.store.key] = JSON.stringify(this.state)
 
     var keys = Object.keys(this.views)
@@ -41,7 +41,7 @@ window.onload = function() {
     }
   }
 
- propeller.registerStore(new Store("propeller"))
+  propeller.registerStore(new Store("propeller"))
   propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : {}
 
   propeller.head = document.getElementsByTagName("header")[0]
