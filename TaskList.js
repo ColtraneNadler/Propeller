@@ -19,7 +19,7 @@ taskList.registerReceiver(
 
     function buildList(view,target, item) {
       for(var i = 0; i < item.length; i++) {
-        if(item[i].active) {
+        if(item[i].active && !item[i].complete) {
           var li = createListItem(item[i])
           createItemEvents(view,item[i])
           addListItem(view,target,li)
@@ -35,7 +35,11 @@ taskList.registerReceiver(
       var rm = document.createElement("a")
 
       li.id = "task_" + item.id
-      task.className = "label"
+      if(item.complete) {
+        task.className = "label complete"
+      } else {
+        task.className = "label"
+      }
       ctrl.className = "ctrl"
       cb.id = "co_" + item.id
       rm.id = "rm_" + item.id
