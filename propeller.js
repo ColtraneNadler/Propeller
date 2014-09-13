@@ -1,5 +1,6 @@
 window.onload = function() {
   propeller = new App()
+  propeller.registerStore(new Store("propeller"))
 
   propeller.signal = function(event) {
     for(var i = 0; i < this.events.length; i++) {
@@ -24,7 +25,7 @@ window.onload = function() {
       }
       this.state[message.target].push(message.content)
     }
-//    this.store.door[this.store.key] = JSON.stringify(this.state)
+    this.store.door[this.store.key] = JSON.stringify(this.state)
 
     var keys = Object.keys(this.views)
     for(var i = 0; i < keys.length; i++) {
