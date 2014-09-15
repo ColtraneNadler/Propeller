@@ -10,6 +10,14 @@ window.onload = function() {
         message = ev.action(event)
         if(message && message.target == "activeView") {
           this.setActiveView(this.views[message.content])
+          if(this.views[message.content].type == "modal") {
+          } else {
+            var keys = Object.keys(this.views)
+            for(var i = 0; i < keys.length; i++) {
+              this.views[keys[i]].active = keys[i] == message.content
+            }
+          }
+          this.update(message)
         } else if(message) {
 //should update happen on setActiveView as well
           this.update(message)
@@ -38,6 +46,8 @@ window.onload = function() {
         }
         this.views[keys[i]].get(this.state)
         section.appendChild(this.views[keys[i]].render())
+      } else {
+        this.remove(this.views[keys[i]])
       }
     }
   }
