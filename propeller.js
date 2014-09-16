@@ -39,11 +39,18 @@ window.onload = function() {
     for(var i = 0; i < keys.length; i++) {
       if(this.state.activeView == this.views[keys[i]].id) {
         this.setActiveView(this.views[keys[i]])
+        var section = this.body.querySelector("#view_" + keys[i])
+        if(this.views[keys[i]].type == "modal") {
+          section.className = section.className + " modal"
+        }
       } else if(this.views[keys[i]].active) {
         var section = this.body.querySelector("#view_" + this.views[keys[i]].id)
         while(section && section.firstChild) {
           section.removeChild(section.firstChild)
         }
+//        if(this.views[keys[i]].type == "modal") {
+//          section.className = section.className + " modal"
+//        }
         this.views[keys[i]].get(this.state)
         section.appendChild(this.views[keys[i]].render())
       } else {
