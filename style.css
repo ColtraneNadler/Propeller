@@ -83,9 +83,14 @@ span {
 }
 
 .modal {
-  position: relative;
+  position: fixed;
+  left: 0px;
+  top: 0px;
   height: 100%;
   width: 100%;
+  padding: 0.15em;
+  border-radius: 1em;
+  background-color: rgba(0,0,0,0.5);
 }
 
 .label {
