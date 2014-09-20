@@ -9,15 +9,20 @@ window.onload = function() {
       if(ev.trigger == event.type && ev.element == event.target.id) {
         message = ev.action(event)
         if(message && message.target == "activeView") {
-          this.setActiveView(this.views[message.content])
-          if(this.views[message.content].type == "modal") {
-          } else {
-            var keys = Object.keys(this.views)
-            for(var i = 0; i < keys.length; i++) {
-              this.views[keys[i]].active = keys[i] == message.content
+          if(message.action == "update") {
+            this.setActiveView(this.views[message.content])
+            if(this.views[message.content].type == "modal") {
+            } else {
+              var keys = Object.keys(this.views)
+              for(var i = 0; i < keys.length; i++) {
+                this.views[keys[i]].active = keys[i] == message.content
+              }
             }
+            this.update(message)
+          } else if(message.action == "delete") {
+            this.remove(this.views[this.state.activeView[this.state.activeView.length - 1]])
+            this.setActiveView(this.views[this.state.activeView[this.state.activeView.length - 1]])
           }
-          this.update(message)
         } else if(message) {
 //should update happen on setActiveView as well
           this.update(message)
@@ -37,11 +42,12 @@ window.onload = function() {
 
     var keys = Object.keys(this.views)
     for(var i = 0; i < keys.length; i++) {
-      if(this.state.activeView == this.views[keys[i]].id) {
+      if(this.state.activeView[this.state.activeView.length - 1] == this.views[keys[i]].id) {
         this.setActiveView(this.views[keys[i]])
         var section = this.body.querySelector("#view_" + keys[i])
         if(this.views[keys[i]].type == "modal") {
           section.className = section.className + " modal"
+          this.body.style.overflow = "hidden"
         }
       } else if(this.views[keys[i]].active) {
         var section = this.body.querySelector("#view_" + this.views[keys[i]].id)
@@ -60,7 +66,7 @@ window.onload = function() {
   }
 
   propeller.registerStore(new Store("propeller"))
-  propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : {}
+  propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : propeller.state
 
   propeller.head = document.getElementsByTagName("header")[0]
   propeller.menu = document.getElementsByTagName("nav")[0]
