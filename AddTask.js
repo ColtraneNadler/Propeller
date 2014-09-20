@@ -3,7 +3,7 @@ addTask.type = "modal"
 
 addTask.set("head","<h1>Propeller</h1>")
 addTask.set("body","<input type=\"text\" id=\"at_input\" value=\"walk the dog\" autofocus=\"autofocus\"/>")
-addTask.set("foot","")
+addTask.set("foot","<input type=\"button\" id=\"at_close\" value=\"finished\"/>")
 
 addTask.events.push(new Event("at_input","keydown",
   function(event) {
@@ -41,5 +41,11 @@ addTask.events.push(new Event("at_input","focusout",
     if(event.target.value == "") {
       event.target.value = null
     }
+  }
+))
+
+addTask.events.push(new Event("at_close","click",
+  function(event) { 
+    return new Message("activeView","delete","")
   }
 ))
