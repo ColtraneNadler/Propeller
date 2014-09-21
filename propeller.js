@@ -18,11 +18,11 @@ window.onload = function() {
                 this.views[keys[i]].active = keys[i] == message.content
               }
             }
-            this.update(message)
           } else if(message.action == "delete") {
             this.remove(this.views[this.state.activeView[this.state.activeView.length - 1]])
             this.setActiveView(this.views[this.state.activeView[this.state.activeView.length - 1]])
           }
+          this.update(message)
         } else if(message) {
 //should update happen on setActiveView as well
           this.update(message)
@@ -48,6 +48,8 @@ window.onload = function() {
         if(this.views[keys[i]].type == "modal") {
           section.className = section.className + " modal"
           this.body.style.overflow = "hidden"
+        } else {
+          this.body.style.overflow = "visible"
         }
       } else if(this.views[keys[i]].active) {
         var section = this.body.querySelector("#view_" + this.views[keys[i]].id)
