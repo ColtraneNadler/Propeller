@@ -1,4 +1,3 @@
-/**
 html, body, header, nav, section, footer, h1, input, ul, li, a {
   margin: 0px;
   padding: 0px;
@@ -54,6 +53,24 @@ input[type=text] {
 input[type=checkbox] {
 }
 
+input[type=button] {
+  display: block;
+  line-height: 1em;
+  border: 1px solid black;
+  border-radius: 0.5em;
+  padding: 0.25em;
+  font-size: 1.5em;
+  margin: auto;
+  margin-top: 1em;
+  color: white;
+  background-color: rgb(121,121,121);
+  cursor: pointer;
+}
+
+input[type=button]:hover {
+  background-color: rgb(80,80,80);
+}
+
 ul {
   list-style: none;
 }
@@ -83,6 +100,17 @@ span {
   display: inline-block;
 }
 
+.modal {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  padding: 0.15em;
+  border-radius: 1em;
+  background-color: rgba(0,0,0,0.5);
+}
+
 .label {
   width: 90%;
 }
@@ -95,4 +123,3 @@ span {
 .complete {
   text-decoration: line-through;
 }
-**/
