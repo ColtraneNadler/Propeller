@@ -27,6 +27,10 @@ window.onload = function() {
           if(message.action == "delete") {
             for(var i = 0; i < this.state.task.length; i++) {
               delete this.state.task[i].tags[message.content.id]
+
+              if(Object.keys(this.state.task[i].tags).length == 0) {
+                this.state.task[i].active = false
+              }
             }
             this.update(message)
           } else {
