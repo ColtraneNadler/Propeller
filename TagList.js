@@ -1,5 +1,7 @@
 tagList = new View("Tags")
+
 tagList.set("head","<h1>Propeller</h1>")
+tagList.set("menu","")
 tagList.set("body","<ul id=\"tag_list\"></ul>")
 tagList.set("foot","")
 

@@ -1,5 +1,7 @@
 basicView = new View("Home")
+
 basicView.set("head","<h1>Propeller</h1>")
+basicView.set("menu","")
 basicView.set("body","<input type=\"text\" id=\"bv_input\" value=\"walk the dog\" autofocus=\"autofocus\"/><ul id=\"task_list\"></ul>")
 basicView.set("foot","")
 

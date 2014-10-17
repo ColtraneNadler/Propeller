@@ -2,6 +2,7 @@ addTask = new View("Add Task")
 addTask.type = "modal"
 
 addTask.set("head","<h1>Propeller</h1>")
+addTask.set("menu","")
 addTask.set("body","<input type=\"text\" id=\"at_input\" value=\"walk the dog\" autofocus=\"autofocus\"/>" +
             "<ul id=\"tag_list\"></ul>")
 addTask.set("foot","<input type=\"button\" id=\"at_close\" value=\"finished\"/>")

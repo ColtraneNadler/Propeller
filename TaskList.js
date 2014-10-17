@@ -1,6 +1,7 @@
 taskList = new View("Tasks")
+
 taskList.set("head","<h1>Propeller</h1>")
-//taskList.menu = "<ul id=\"tag_list\"></ul>"
+taskList.set("menu","<ul id=\"tag_list\"></ul>")
 taskList.set("body","<ul id=\"task_list\"></ul>")
 taskList.set("foot","")
 

@@ -2,6 +2,7 @@ addTag = new View("Add Tag")
 addTag.type = "modal"
 
 addTag.set("head","<h1>Propeller</h1>")
+addTag.set("menu","")
 addTag.set("body","<input type=\"text\" id=\"at_input\" value=\"chores\" autofocus=\"autofocus\"/>")
 addTag.set("foot","<input type=\"button\" id=\"at_close\" value=\"finished\"/>")
 
