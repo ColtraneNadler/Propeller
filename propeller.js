@@ -36,6 +36,10 @@ window.onload = function() {
           } else {
             this.update(message)
           }
+        } else if(message && message.target == "activeTag") {
+//          console.log(message)
+          this.state.activeTag = message.content
+          this.update(message)
         } else if(message) {
 //should update happen on setActiveView as well
           this.update(message)

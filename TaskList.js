@@ -25,14 +25,13 @@ taskList.registerReceiver(
       buildMenu(this,"#tag_list",state.tag)
     }
     if(state.task && state.task.length > 0) {
-      buildList(this,"#task_list",state.task)
+      buildList(this,"#task_list",state.task,state.activeTag)
     }
 
     function buildMenu(view,target,item) {
       for(var i = 0; i < item.length; i++) {
         if(item[i].active) {
           var li = createMenuItem(item[i])
-//          console.log(li)
           createMenuEvents(view,item[i])
           addMenuItem(view,target,li)
         }
@@ -53,7 +52,7 @@ taskList.registerReceiver(
       setActiveTag.element = "tag_" + item.id
       setActiveTag.trigger = "click"
       setActiveTag.action = function(event) {
-        return new Message("activeTag","update",item.label)
+        return new Message("activeTag","update",item.id)
       }
 
       view.events.push(setActiveTag)
@@ -63,12 +62,20 @@ taskList.registerReceiver(
       view.menu.querySelector(target).appendChild(item)
     }
 
-    function buildList(view,target, item) {
+    function buildList(view,target, item,tag) {
       for(var i = 0; i < item.length; i++) {
-        if(item[i].active && !item[i].complete) {
-          var li = createListItem(item[i])
-          createItemEvents(view,item[i])
-          addListItem(view,target,li)
+        if(tag) {
+          if(item[i].active && !item[i].complete && item[i].tags[tag]==true) {
+            var li = createListItem(item[i])
+            createItemEvents(view,item[i])
+            addListItem(view,target,li)
+          }
+        } else {
+          if(item[i].active && !item[i].complete) {
+            var li = createListItem(item[i])
+            createItemEvents(view,item[i])
+            addListItem(view,target,li)
+          }
         }
       }
     }
