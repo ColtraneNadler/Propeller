@@ -1,28 +1,81 @@
 taskList = new View("Tasks")
+
 taskList.set("head","<h1>Propeller</h1>")
-//taskList.menu = "<ul id=\"tag_list\"></ul>"
+taskList.set("menu","<ul id=\"tag_list\"></ul>")
 taskList.set("body","<ul id=\"task_list\"></ul>")
 taskList.set("foot","")
 
 taskList.registerReceiver(
   function(state) {
     var task_list = this.body.querySelector("#task_list")
+    var tag_list = this.menu.querySelector("#tag_list")
+
     while(task_list.firstChild) {
       task_list.removeChild(task_list.firstChild)
     }
+    while(tag_list.firstChild) {
+      tag_list.removeChild(tag_list.firstChild)
+    }
+
     while(this.events.length > 0) {
       this.events.pop()
     }
+
+    if(state.tag && state.tag.length > 0) {
+      buildMenu(this,"#tag_list",state.tag)
+    }
     if(state.task && state.task.length > 0) {
-      buildList(this,"#task_list",state.task)
+      buildList(this,"#task_list",state.task,state.activeTag)
     }
 
-    function buildList(view,target, item) {
+    function buildMenu(view,target,item) {
       for(var i = 0; i < item.length; i++) {
-        if(item[i].active && !item[i].complete) {
-          var li = createListItem(item[i])
-          createItemEvents(view,item[i])
-          addListItem(view,target,li)
+        if(item[i].active) {
+          var li = createMenuItem(item[i])
+          createMenuEvents(view,item[i])
+          addMenuItem(view,target,li)
+        }
+      }
+    }
+
+    function createMenuItem(item) {
+      var li = document.createElement("li")
+
+      li.id = "tag_" + item.id
+      li.appendChild(document.createTextNode(item.label))
+
+      return li
+    }
+
+    function createMenuEvents(view,item) {
+      var setActiveTag = new Event()
+      setActiveTag.element = "tag_" + item.id
+      setActiveTag.trigger = "click"
+      setActiveTag.action = function(event) {
+        return new Message("activeTag","update",item.id)
+      }
+
+      view.events.push(setActiveTag)
+    }
+
+    function addMenuItem(view,target,item) {
+      view.menu.querySelector(target).appendChild(item)
+    }
+
+    function buildList(view,target, item,tag) {
+      for(var i = 0; i < item.length; i++) {
+        if(tag) {
+          if(item[i].active && !item[i].complete && item[i].tags[tag]==true) {
+            var li = createListItem(item[i])
+            createItemEvents(view,item[i])
+            addListItem(view,target,li)
+          }
+        } else {
+          if(item[i].active && !item[i].complete) {
+            var li = createListItem(item[i])
+            createItemEvents(view,item[i])
+            addListItem(view,target,li)
+          }
         }
       }
     }

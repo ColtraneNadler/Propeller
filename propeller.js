@@ -23,6 +23,23 @@ window.onload = function() {
             this.setActiveView(this.views[this.state.activeView[this.state.activeView.length - 1]])
           }
           this.update(message)
+        } else if(message && message.target == "tag") {
+          if(message.action == "delete") {
+            for(var i = 0; i < this.state.task.length; i++) {
+              delete this.state.task[i].tags[message.content.id]
+
+              if(Object.keys(this.state.task[i].tags).length == 0) {
+                this.state.task[i].active = false
+              }
+            }
+            this.update(message)
+          } else {
+            this.update(message)
+          }
+        } else if(message && message.target == "activeTag") {
+//          console.log(message)
+          this.state.activeTag = message.content
+          this.update(message)
         } else if(message) {
 //should update happen on setActiveView as well
           this.update(message)
@@ -79,11 +96,15 @@ window.onload = function() {
 
   propeller.registerView(basicView)
 
+  propeller.registerView(addTag)
   propeller.registerView(addTask)
   propeller.registerView(taskList)
+  propeller.registerView(tagList)
 
+  propeller.addToMenu(addTag)
   propeller.addToMenu(addTask)
   propeller.addToMenu(taskList)
+  propeller.addToMenu(tagList)
 
   propeller.setActiveView(basicView)
 }
