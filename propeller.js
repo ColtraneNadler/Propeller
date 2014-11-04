@@ -100,6 +100,7 @@ window.onload = function() {
   propeller.registerView(addTask)
   propeller.registerView(taskList)
   propeller.registerView(tagList)
+  propeller.registerView(activeTask)
 
   propeller.addToMenu(addTag)
   propeller.addToMenu(addTask)
