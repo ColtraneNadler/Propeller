@@ -23,6 +23,8 @@ window.onload = function() {
             this.setActiveView(this.views[this.state.activeView[this.state.activeView.length - 1]])
           }
           this.update(message)
+        } else if(message && message.target == "activeTask") {
+          console.log(message)
         } else if(message && message.target == "tag") {
           if(message.action == "delete") {
             for(var i = 0; i < this.state.task.length; i++) {
