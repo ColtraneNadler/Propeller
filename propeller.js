@@ -24,13 +24,14 @@ window.onload = function() {
           }
           this.update(message)
         } else if(message && message.target == "activeTask") {
-          console.log(message)
+          this.state.activeTask = message.content.id
 //how to do this in a reasonable way?
           this.setActiveView(activeTask)
           var keys = Object.keys(this.views)
           for(var i = 0; i < keys.length; i++) {
             this.views[keys[i]].active = keys[i] == message.content.id
           }
+          this.update(message)
         } else if(message && message.target == "tag") {
           if(message.action == "delete") {
             for(var i = 0; i < this.state.task.length; i++) {
