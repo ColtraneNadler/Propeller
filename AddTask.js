@@ -4,6 +4,9 @@ addTask.type = "modal"
 addTask.set("head","<h1>Propeller</h1>")
 addTask.set("menu","")
 addTask.set("body","<input type=\"text\" id=\"at_input\" value=\"walk the dog\" autofocus=\"autofocus\"/>" +
+            "<input type=\"number\" id=\"at_hours\" value=\"00\" />" +
+            "<input type=\"number\" id=\"at_minutes\" value=\"25\" />" +
+            "<input type=\"number\" id=\"at_seconds\" value=\"00\" />" +
             "<ul id=\"tag_list\"></ul>")
 addTask.set("foot","<input type=\"button\" id=\"at_close\" value=\"finished\"/>")
 
@@ -65,6 +68,8 @@ addTask.events.push(new Event("at_input","keydown",
       task.label = event.target.value
       task.complete = false
       task.active = true
+
+      task.requiredTime = ""
 
 //tag.tasks might be better than tasks.tags
 //make tasks an attribute of tags?

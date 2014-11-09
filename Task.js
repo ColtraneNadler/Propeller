@@ -11,7 +11,10 @@ function Task() {
   this.complete = ""
 
   this.creationTime = new Date().getTime()
-  this.completeTime = null;
+  this.completeTime = null
+
+  this.requiredTime = ""
+  this.workSessions = []
 
   this.tags = {}
 }
