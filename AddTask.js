@@ -4,11 +4,12 @@ addTask.type = "modal"
 addTask.set("head","<h1>Propeller</h1>")
 addTask.set("menu","")
 addTask.set("body","<input type=\"text\" id=\"at_input\" value=\"walk the dog\" autofocus=\"autofocus\"/>" +
-            "<input type=\"number\" id=\"at_hours\" value=\"00\" />" +
-            "<input type=\"number\" id=\"at_minutes\" value=\"25\" />" +
-            "<input type=\"number\" id=\"at_seconds\" value=\"00\" />" +
+            "<input type=\"number\" id=\"at_hours\" value=\"23\" />:" +
+            "<input type=\"number\" id=\"at_minutes\" value=\"59\" />:" +
+            "<input type=\"number\" id=\"at_seconds\" value=\"59\" />" +
             "<ul id=\"tag_list\"></ul>")
-addTask.set("foot","<input type=\"button\" id=\"at_close\" value=\"finished\"/>")
+addTask.set("foot","<input type=\"button\" id=\"at_submit\" value=\"create\"/>" +
+            "<input type=\"button\" id=\"at_close\" value=\"cancel\" />")
 
 addTask.registerReceiver(
   function(state) {
@@ -80,6 +81,12 @@ addTask.events.push(new Event("at_input","keydown",
           task.tags[id] = true
         }
       }
+      var time = event.target.parentNode.querySelector("#at_hours").value * 60
+      time = (time + parseInt(event.target.parentNode.querySelector("#at_minutes").value)) * 60
+      time = (time + parseInt(event.target.parentNode.querySelector("#at_seconds").value)) * 1000
+
+      task.requiredTime = time
+
       event.target.value = ""
       return new Message("task","create",task)
     }
