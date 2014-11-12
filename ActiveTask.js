@@ -17,8 +17,9 @@ activeTask.registerReceiver(
 
       for(var i = 0; i < state.task.length && !match; i++) {
         match = state.task[i].id == state.activeTask
-//this should only happen if match is true
-        task.appendChild(document.createTextNode(state.task[i].label))
+        if(match) {
+          task.appendChild(document.createTextNode(state.task[i].label))
+        }
       }
     }
   }
