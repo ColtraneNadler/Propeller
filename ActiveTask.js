@@ -24,8 +24,36 @@ activeTask.registerReceiver(
         match = state.task[i].id == state.activeTask
         if(match) {
           task.appendChild(document.createTextNode(state.task[i].label))
-          clock.appendChild(document.createTextNode(state.task[i].requiredTime - state.task[i].workSessions.reduce(function(a,b) {return a + b },0)))
+          var time = state.task[i].requiredTime
+          time -= state.task[i].workSessions.reduce(function(a,b) { return a + b },0)
+          time = getHours(time) + ":" + getMinutes(time) + ":" + getSeconds(time) + "." + getMilliseconds(time)
+          clock.appendChild(document.createTextNode(time))
         }
+      }
+    }
+
+    function getHours(time) {
+      return Math.floor((time / 1000 / 3600))
+    }
+
+    function getMinutes(time) {
+      return Math.floor((time / 1000) / 60) % 60
+    }
+
+    function getSeconds(time) {
+      return Math.floor(time / 1000) % 60
+    }
+
+    function getMilliseconds(time) {
+      return Math.floor((time % 1000) / 100)
+    }
+
+//ahhhhh multiple returns!
+    function prependZero(value) {
+      if(Math.floor(value / 10) == 0) {
+        return "0" + value
+      } else {
+        return value
       }
     }
   }
