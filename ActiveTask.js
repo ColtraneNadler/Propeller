@@ -26,8 +26,40 @@ activeTask.registerReceiver(
           task.appendChild(document.createTextNode(state.task[i].label))
           var time = state.task[i].requiredTime
           time -= state.task[i].workSessions.reduce(function(a,b) { return a + b },0)
-          time = getHours(time) + ":" + getMinutes(time) + ":" + getSeconds(time) + "." + getMilliseconds(time)
+//make this less ugly at some point
+          time = prependZero(getHours(time)) + ":" + prependZero(getMinutes(time)) + ":" + prependZero(getSeconds(time)) + "." + prependZero(getMilliseconds(time))
           clock.appendChild(document.createTextNode(time))
+        }
+      }
+    }
+
+    var counter = function() {
+      var duration = state.task[i].requiredTime
+      var timeLeft = duration * 60 * 1000
+      var timerEnd = 0
+
+      var running = false
+      var timerID = 0
+
+      function tick(element) {
+        timeLeft = timerEnd - (new Date().getTime())
+        if(this.timeLeft > 0) {
+          
+        } else {
+
+        }
+      }
+
+      return {
+        countDown: function() {
+          if(!running) {
+            running = true
+            timerEnd = new Date().getTime() + timeLeft
+          }
+        },
+        decrement: function() {
+        },
+        value: function() {
         }
       }
     }
