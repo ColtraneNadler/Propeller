@@ -33,7 +33,7 @@ activeTask.registerReceiver(
       }
     }
 
-    var counter = function() {
+    var timer = function() {
       var duration = state.task[i].requiredTime
       var timeLeft = duration * 60 * 1000
       var timerEnd = 0
@@ -41,13 +41,19 @@ activeTask.registerReceiver(
       var running = false
       var timerID = 0
 
-      function tick(element) {
+      function tick() {
         timeLeft = timerEnd - (new Date().getTime())
-        if(this.timeLeft > 0) {
-          
+        if(timeLeft > 0) {
+          //tell the time left
         } else {
-
+          stop()
         }
+      }
+
+      function stop() {
+        clearInterval(timerID)
+        timeLeft = 0
+        isRunning = false
       }
 
       return {
@@ -56,14 +62,9 @@ activeTask.registerReceiver(
             running = true
             timerEnd = new Date().getTime() + timeLeft
           }
-        },
-        decrement: function() {
-        },
-        value: function() {
         }
       }
     }
-
     function getHours(time) {
       return Math.floor((time / 1000 / 3600))
     }
@@ -90,3 +91,9 @@ activeTask.registerReceiver(
     }
   }
 )
+
+activeTask.events.push(new Event("clockFace","dblclick",
+  function(event) {
+    console.log(event)
+  }
+))
