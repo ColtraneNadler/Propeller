@@ -93,7 +93,15 @@ activeTask.registerReceiver(
 )
 
 activeTask.events.push(new Event("clockFace","dblclick",
-  function(event) {
-    console.log(event)
-  }
+  function() {
+    var count = 0
+    return function(event) {
+      console.log(count)
+      count++
+      while(event.target.firstChild) {
+        event.target.removeChild(event.target.firstChild)
+      }
+      event.target.appendChild(document.createTextNode(count))
+    }
+  }()
 ))
