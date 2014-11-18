@@ -33,38 +33,6 @@ activeTask.registerReceiver(
       }
     }
 
-    var timer = function() {
-      var duration = state.task[i].requiredTime
-      var timeLeft = duration * 60 * 1000
-      var timerEnd = 0
-
-      var running = false
-      var timerID = 0
-
-      function tick() {
-        timeLeft = timerEnd - (new Date().getTime())
-        if(timeLeft > 0) {
-          //tell the time left
-        } else {
-          stop()
-        }
-      }
-
-      function stop() {
-        clearInterval(timerID)
-        timeLeft = 0
-        isRunning = false
-      }
-
-      return {
-        countDown: function() {
-          if(!running) {
-            running = true
-            timerEnd = new Date().getTime() + timeLeft
-          }
-        }
-      }
-    }
     function getHours(time) {
       return Math.floor((time / 1000 / 3600))
     }
