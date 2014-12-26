@@ -1,6 +1,5 @@
 window.onload = function() {
   propeller = new App()
-  propeller.registerStore(new Store("propeller"))
 
   propeller.signal = function(event) {
     for(var i = 0; i < this.events.length; i++) {
@@ -95,6 +94,8 @@ window.onload = function() {
 
   propeller.registerStore(new Store("propeller"))
   propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : propeller.state
+  propeller.state.timer = propeller.state.timer ? propeller.state.timer : new Timer()
+
 
   propeller.head = document.getElementsByTagName("header")[0]
   propeller.menu = document.getElementsByTagName("nav")[0]
