@@ -95,7 +95,7 @@ window.onload = function() {
   propeller.registerStore(new Store("propeller"))
   propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : propeller.state
   propeller.state.timer = propeller.state.timer ? propeller.state.timer : new Timer()
-
+  propeller.state.version = propeller.state.version ? propeller.state.version : "0.3.0"
 
   propeller.head = document.getElementsByTagName("header")[0]
   propeller.menu = document.getElementsByTagName("nav")[0]
