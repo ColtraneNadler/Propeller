@@ -1,6 +1,5 @@
 window.onload = function() {
   propeller = new App()
-  propeller.registerStore(new Store("propeller"))
 
   propeller.signal = function(event) {
     for(var i = 0; i < this.events.length; i++) {
@@ -21,6 +20,15 @@ window.onload = function() {
           } else if(message.action == "delete") {
             this.remove(this.views[this.state.activeView[this.state.activeView.length - 1]])
             this.setActiveView(this.views[this.state.activeView[this.state.activeView.length - 1]])
+          }
+          this.update(message)
+        } else if(message && message.target == "activeTask") {
+          this.state.activeTask = message.content.id
+//how to do this in a reasonable way?
+          this.setActiveView(activeTask)
+          var keys = Object.keys(this.views)
+          for(var i = 0; i < keys.length; i++) {
+            this.views[keys[i]].active = keys[i] == message.content.id
           }
           this.update(message)
         } else if(message && message.target == "tag") {
@@ -86,6 +94,8 @@ window.onload = function() {
 
   propeller.registerStore(new Store("propeller"))
   propeller.state = propeller.store.door[propeller.store.key] ? JSON.parse(propeller.store.door[propeller.store.key]) : propeller.state
+  propeller.state.timer = propeller.state.timer ? propeller.state.timer : new Timer()
+  propeller.state.version = propeller.state.version ? propeller.state.version : "0.3.0"
 
   propeller.head = document.getElementsByTagName("header")[0]
   propeller.menu = document.getElementsByTagName("nav")[0]
@@ -100,6 +110,7 @@ window.onload = function() {
   propeller.registerView(addTask)
   propeller.registerView(taskList)
   propeller.registerView(tagList)
+  propeller.registerView(activeTask)
 
   propeller.addToMenu(addTag)
   propeller.addToMenu(addTask)

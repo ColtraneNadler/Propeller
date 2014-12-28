@@ -132,8 +132,16 @@ taskList.registerReceiver(
         return new Message("task","delete",item)
       }
 
+      var activate = new Event()
+      activate.element = "task_" + item.id
+      activate.trigger = "dblclick"
+      activate.action = function(event) {
+        return new Message("activeTask","update",item)
+      }
+
       view.events.push(complete)
       view.events.push(remove)
+      view.events.push(activate)
     }
 
 //perhaps target should be a reference to the query selection
